@@ -14,60 +14,123 @@ public class GUI {
 	
 	static JFrame frame = new JFrame("Java Minigames");
 	static JPanel panel = new JPanel();
-	static JLabel mainMenu = new JLabel();
 	static JLabel mainLabel = new JLabel(); 
+	static JLabel secondaryLabel = new JLabel();
+	static JLabel tertiaryLabel = new JLabel();
 	
-	static JButton optionOne = new JButton("Option 1");
-	static JButton optionTwo = new JButton("Option 2");
+	static JButton optionOne = new JButton("Choose");
+	static JButton optionTwo = new JButton("Choose");
 	
-	static JButton yesButton = new JButton();
-	static JButton noButton = new JButton();
-	static JButton exit = new JButton("Exit"); 
 	static JButton proceed = new JButton("Continue");
+	static JButton returnButton = new JButton("Return");
+	static JButton exit = new JButton("Exit"); 
+	
+	static JFormattedTextField textField = new JFormattedTextField();
 	
 	public static void main(String[] args) {
-		int h = 990, w = 610; 
-		
-		frame.setSize(h,w); // window size
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // default operation when it closes
+		int h = 610, w = 1000; 
+
+		frame.setSize(w,h); // window size
+		frame.setLocation(500,250); // center
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		frame.setVisible(true);
 		frame.add(panel);
 		panel.setLayout(null);
-		mainMenu.setBounds(20, 10, 950, 510);
 		mainLabel.setVerticalAlignment(JLabel.TOP);
-		mainLabel.setBounds(20, 10, 950, 510); // 950x510, border +10 px 
+		mainLabel.setBounds(10, 10, w-35, h-90); // 950x510, border +10 px in
 		
-		yesButton.setBounds(460,535,85,25);
-		noButton.setBounds(560,535,85,25);
+		proceed.setBounds(460,535,85,25);
+		returnButton.setBounds(560,535,85,25);
 		
 		panel.add(mainLabel);
 		mainLabel.setBorder(BorderFactory.createLineBorder(Color.black));
 		
-		startGui();
+		mainMenu();
 	}
 	
-	public static void startGui() {
+	public static void mainMenu() {
 		mainLabel.setFont(Title);		
 		mainLabel.setText ("<html> Java Minigames </html>");
 		mainLabel.setHorizontalAlignment(JLabel.CENTER);
-		proceed.setBounds(460,535,85,25);
 		
-		panel.add(proceed);
+		secondaryLabel.setFont(SubTitle);
+		secondaryLabel.setText("<html> Memorization Game </html>");
+		secondaryLabel.setHorizontalAlignment(JLabel.LEFT);
+		secondaryLabel.setBounds(180, 300, 300, 200);
+		panel.add(secondaryLabel);
+		
+		tertiaryLabel.setFont(SubTitle);
+		tertiaryLabel.setText("<html> Sorting Game </html>");
+		tertiaryLabel.setHorizontalAlignment(JLabel.RIGHT);
+		tertiaryLabel.setBounds(510, 300, 300, 200);
+		panel.add(tertiaryLabel);
+		
+//		int boundX = ((frame.getBounds().x)/2)-proceed.getBounds().x; this doesnt work for some reason?
+		
+		exit.setBounds(460,535,85,25);
+		panel.add(exit);
+		
+		optionOne.setBounds(230, 425, 85, 25);
+		panel.add(optionOne);
+		
+		optionTwo.setBounds(690, 425, 85, 25);
+		panel.add(optionTwo);
+		
 		panel.revalidate();
 		panel.repaint(); 
 		
-		proceed.addActionListener //adding an action to the press of this button
-		(
+		exit.addActionListener (
 			new ActionListener() 
 			{
-				public void actionPerformed(ActionEvent e) //the action to be completed when button action is completed
+				public void actionPerformed(ActionEvent e)
 				{	
-					panel.remove(mainLabel);
-					panel.remove(proceed);
-					mainLabel.setFont(NormalText);
-					
+					System.exit(0);
 				}
 			}
 		);
+		
+		optionOne.addActionListener(
+			new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					panel.remove(mainLabel);
+					panel.remove(secondaryLabel);
+					panel.remove(tertiaryLabel);
+					panel.remove(exit);
+					panel.remove(optionOne);
+					panel.remove(optionTwo);
+					panel.repaint(); 
+					Main.addPlayer(1);
+				}
+			}
+		);
+		
+		optionTwo.addActionListener(
+			new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					panel.remove(mainLabel);
+					panel.remove(secondaryLabel);
+					panel.remove(tertiaryLabel);
+					panel.remove(exit);
+					panel.remove(optionOne);
+					panel.remove(optionTwo);
+					panel.repaint(); 
+					Main.addPlayer(2);
+				}
+			}
+		);
+	}
+	
+	public static PlayerData EnterPlayerData() {
+		mainLabel.setFont(Title);		
+		mainLabel.setText ("<html> Java Minigames </html>");
+		mainLabel.setHorizontalAlignment(JLabel.CENTER);
+		panel.add(mainLabel);
+		
+		proceed.setBounds(460,535,85,25);
+		panel.add(proceed);
+		
+		// add textField
+		
+		// TODO finish adding player data input menu
 	}
 }
