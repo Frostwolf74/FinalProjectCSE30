@@ -12,7 +12,11 @@ public class PlayerData {
 		this.highScoreGame1 = highScoreGame1;
 		this.highScoreGame2 = highScoreGame2;
 	}
-
+	
+	public PlayerData()
+	{
+		
+	}
 	public String getName() {
 		return name;
 	}

@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 
 public class GUI {
 	static Font Title = new Font("Arial", Font.PLAIN, 50);
@@ -37,7 +38,7 @@ public class GUI {
 		frame.add(panel);
 		panel.setLayout(null);
 		mainLabel.setVerticalAlignment(JLabel.TOP);
-		mainLabel.setBounds(10, 10, w-35, h-90); // 950x510, border +10 px in
+		mainLabel.setBounds(10, 10, w-35, h-90); // border +10 px in
 		
 		proceed.setBounds(460,535,85,25);
 		returnButton.setBounds(560,535,85,25);
@@ -120,17 +121,39 @@ public class GUI {
 		);
 	}
 	
-	public static PlayerData EnterPlayerData() {
-		mainLabel.setFont(Title);		
-		mainLabel.setText ("<html> Java Minigames </html>");
+	public static void EnterPlayerData() {
+		PlayerData newPlayer = new PlayerData();
+		
+		mainLabel.setFont(SubTitle);		
+		mainLabel.setText ("<html> Enter player name </html>");
 		mainLabel.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(mainLabel);
 		
-		proceed.setBounds(460,535,85,25);
+		proceed.setBounds(455,535,85,25);
 		panel.add(proceed);
 		
-		// add textField
+		panel.add(textField);
+		textField.setBounds(455, 325, 85, 25);
 		
-		// TODO finish adding player data input menu
+		panel.repaint();
+		panel.revalidate();
+		
+		proceed.addActionListener(
+			new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					panel.remove(mainLabel);
+					panel.remove(proceed);
+					panel.remove(textField);
+					panel.repaint();
+					panel.revalidate();
+					
+					String name = textField.getText();
+					newPlayer.setName(name);
+					newPlayer.setHighScoreGame1(0);
+					newPlayer.setHighScoreGame2(0);
+					Main.addNewPlayer(newPlayer);
+				}
+			}
+		);
 	}
 }
