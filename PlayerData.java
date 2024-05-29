@@ -1,7 +1,5 @@
 package finalProject;
 
-import java.util.ArrayList;
-
 public class PlayerData {
 	private String name;
 	private int highScoreGame1;
@@ -13,10 +11,8 @@ public class PlayerData {
 		this.highScoreGame2 = highScoreGame2;
 	}
 	
-	public PlayerData()
-	{
-		
-	}
+	public PlayerData(){}
+	
 	public String getName() {
 		return name;
 	}

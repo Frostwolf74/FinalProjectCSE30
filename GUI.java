@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class GUI {
@@ -19,14 +20,16 @@ public class GUI {
 	static JLabel secondaryLabel = new JLabel();
 	static JLabel tertiaryLabel = new JLabel();
 	
-	static JButton optionOne = new JButton("Choose");
-	static JButton optionTwo = new JButton("Choose");
+	static JButton optionOne = new JButton();
+	static JButton optionTwo = new JButton();
+	static JButton optionThree = new JButton();
 	
 	static JButton proceed = new JButton("Continue");
 	static JButton returnButton = new JButton("Return");
 	static JButton exit = new JButton("Exit"); 
 	
 	static JFormattedTextField textField = new JFormattedTextField();
+	static JFormattedTextField textField2 = new JFormattedTextField();
 	
 	public static void main(String[] args) {
 		int h = 610, w = 1000; 
@@ -72,9 +75,11 @@ public class GUI {
 		panel.add(exit);
 		
 		optionOne.setBounds(230, 425, 85, 25);
+		optionOne.setText("Choose");
 		panel.add(optionOne);
 		
 		optionTwo.setBounds(690, 425, 85, 25);
+		optionTwo.setText("Choose");
 		panel.add(optionTwo);
 		
 		panel.revalidate();
@@ -99,6 +104,7 @@ public class GUI {
 					panel.remove(exit);
 					panel.remove(optionOne);
 					panel.remove(optionTwo);
+					optionOne.removeActionListener(this);
 					panel.repaint(); 
 					Main.addPlayer(1);
 				}
@@ -114,13 +120,14 @@ public class GUI {
 					panel.remove(exit);
 					panel.remove(optionOne);
 					panel.remove(optionTwo);
+					optionTwo.removeActionListener(this);
 					panel.repaint(); 
 					Main.addPlayer(2);
 				}
 			}
 		);
 	}
-	
+
 	public static void EnterPlayerData() {
 		PlayerData newPlayer = new PlayerData();
 		
@@ -135,23 +142,98 @@ public class GUI {
 		panel.add(textField);
 		textField.setBounds(455, 325, 85, 25);
 		
+		secondaryLabel.setText("<html> Enter a name </html>");
+		secondaryLabel.setFont(new Font("Arial", Font.ITALIC, 20));
+		secondaryLabel.setBounds(440, 265, 300, 200);
+		secondaryLabel.setForeground(Color.RED);
+		
 		panel.repaint();
 		panel.revalidate();
 		
 		proceed.addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					panel.remove(mainLabel);
-					panel.remove(proceed);
-					panel.remove(textField);
+					if (textField.getText().isEmpty()) {
+						panel.add(secondaryLabel); // inform the user that they have not entered any text
+						panel.repaint();
+						panel.revalidate();
+					}
+					else {
+						panel.remove(mainLabel);
+						panel.remove(proceed);
+						panel.remove(textField);
+						panel.remove(secondaryLabel);
+						proceed.removeActionListener(this);
+						panel.repaint();
+						panel.revalidate();
+						
+						String name = textField.getText();
+						newPlayer.setName(name);
+						newPlayer.setHighScoreGame1(0);
+						newPlayer.setHighScoreGame2(0);
+						Main.addNewPlayer(newPlayer);
+						
+					}
+				}
+			}
+		);		
+	}
+	
+	public static void memorizationGame() {
+		// select difficulty
+		// set up grid
+
+		mainLabel.setFont(SubTitle);		
+		mainLabel.setText ("<html> Select Difficulty </html>");
+		mainLabel.setHorizontalAlignment(JLabel.CENTER);
+		panel.add(mainLabel);
+		
+		proceed.setBounds(455,535,85,25);
+		panel.add(proceed);
+		
+		optionOne.setBounds(355, 325, 85, 25);
+		optionOne.setText("Easy");
+		panel.add(optionOne);
+		
+		optionTwo.setBounds(455, 325, 85, 25);
+		optionTwo.setText("Medium");
+		panel.add(optionTwo);
+		
+		optionThree.setBounds(555, 325, 85, 25);
+		optionThree.setText("Hard");
+		panel.add(optionThree);
+		
+		panel.repaint();
+		panel.revalidate();
+		
+		proceed.addActionListener( // TODO set up difficulty
+			new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 					panel.repaint();
-					panel.revalidate();
-					
-					String name = textField.getText();
-					newPlayer.setName(name);
-					newPlayer.setHighScoreGame1(0);
-					newPlayer.setHighScoreGame2(0);
-					Main.addNewPlayer(newPlayer);
+				}
+			}
+		);
+		
+		optionOne.addActionListener(
+			new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					panel.repaint();
+				}
+			}
+		);
+		
+		optionTwo.addActionListener(
+			new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+					panel.repaint();
+				}
+			}
+		);
+		
+		optionThree.addActionListener(
+			new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					panel.repaint();
 				}
 			}
 		);
