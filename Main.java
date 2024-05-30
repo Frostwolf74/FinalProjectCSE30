@@ -13,12 +13,6 @@ public class Main {
 	
 	public static void addNewPlayer(PlayerData newPlayer) {
 		players.add(newPlayer);
-		
-		if(game == 1) {
-			GUI.memorizationGame();
-		}
-		else if(game == 2) {
-//			GUI.sortingGame();
-		}
+		GUI.difficulty(game);
 	}
 }

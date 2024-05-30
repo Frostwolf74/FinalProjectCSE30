@@ -69,8 +69,6 @@ public class GUI {
 		tertiaryLabel.setBounds(510, 300, 300, 200);
 		panel.add(tertiaryLabel);
 		
-//		int boundX = ((frame.getBounds().x)/2)-proceed.getBounds().x; this doesnt work for some reason?
-		
 		exit.setBounds(460,535,85,25);
 		panel.add(exit);
 		
@@ -172,24 +170,36 @@ public class GUI {
 						newPlayer.setHighScoreGame1(0);
 						newPlayer.setHighScoreGame2(0);
 						Main.addNewPlayer(newPlayer);
-						
 					}
 				}
 			}
 		);		
 	}
 	
-	public static void memorizationGame() {
-		// select difficulty
-		// set up grid
+	static int difficulty = 0;
+	
+	public static void difficultyEasy(int game) {
+		difficulty = 1;
+		startGame(game);
+	}
+	
+	public static void difficultyMedium(int game) {
+		difficulty = 2;
+		startGame(game);
+	}
+	
+	public static void difficultyHard(int game) {
+		difficulty = 3;
+		startGame(game);
+	}
+	
+	public static void difficulty(int game) {
+		// TODO add information about each game mode
 
 		mainLabel.setFont(SubTitle);		
 		mainLabel.setText ("<html> Select Difficulty </html>");
 		mainLabel.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(mainLabel);
-		
-		proceed.setBounds(455,535,85,25);
-		panel.add(proceed);
 		
 		optionOne.setBounds(355, 325, 85, 25);
 		optionOne.setText("Easy");
@@ -206,26 +216,32 @@ public class GUI {
 		panel.repaint();
 		panel.revalidate();
 		
-		proceed.addActionListener( // TODO set up difficulty
-			new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					panel.repaint();
-				}
-			}
-		);
-		
 		optionOne.addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					difficultyEasy(game);
+					panel.remove(optionOne);
+					panel.remove(optionTwo);
+					panel.remove(optionThree);
+					panel.remove(mainLabel);
+					optionOne.removeActionListener(this);
 					panel.repaint();
+					panel.revalidate();
 				}
 			}
 		);
 		
 		optionTwo.addActionListener(
 			new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
+					difficultyMedium(game);
+					panel.remove(optionOne);
+					panel.remove(optionTwo);
+					panel.remove(optionThree);
+					panel.remove(mainLabel);
+					optionTwo.removeActionListener(this);
 					panel.repaint();
+					panel.revalidate();
 				}
 			}
 		);
@@ -233,9 +249,35 @@ public class GUI {
 		optionThree.addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					difficultyHard(game);
+					panel.remove(optionOne);
+					panel.remove(optionTwo);
+					panel.remove(optionThree);
+					panel.remove(mainLabel);
+					optionThree.removeActionListener(this);
 					panel.repaint();
+					panel.revalidate();
 				}
 			}
 		);
+	}
+	
+	public static void startGame(int game) {
+		switch(game) {
+		case 1:
+			memorizationGame(difficulty);
+			break;
+		case 2:
+			sortingGame(difficulty);
+			break;
+		}			
+	}
+
+	private static void memorizationGame(int inputDifficulty) {
+		JButton A1, A2, A3, B1, B2, B3, C1, C2, C3 = new JButton();
+	}
+	
+	private static void sortingGame(int inputDifficulty) {
+		// TODO complete
 	}
 }
