@@ -51,26 +51,26 @@ public class TestGUI {
 	}
 	
 	public static String buttonSymbolRandomizer() {
-		Random rand = new Random(System.currentTimeMillis()); // TODO fix, not random enough
-	    double num = rand.nextDouble();
+		Random rand = new Random(); // TODO fix, not random enough
+	    int num = rand.nextInt(6);
 		String sym = "skipped";
 		
-		if(num < 1/6) {
+		if(num == 0) {
 			sym = "!";
 		}
-		else if(num < 2/6) {
+		else if(num == 1) {
 			sym = "@";
 		}
-		else if(num < 3/6) {
+		else if(num == 2) {
 			sym = "#";
 		}
-		else if(num < 4/6) {
+		else if(num  == 3) {
 			sym = "$";
 		}
-		else if(num < 5/6) {
+		else if(num  == 4) {
 			sym = "%";
 		}
-		else if(num <= 6/6) {
+		else if(num  == 5) {
 			sym = "&";
 		}
 		System.out.println(num);
@@ -83,18 +83,30 @@ public class TestGUI {
 		button.add(new JButton("A1"));
 		button.add(new JButton("A2"));
 		button.add(new JButton("A3"));
+		button.add(new JButton("A4"));
 		button.add(new JButton("B1"));
 		button.add(new JButton("B2"));
 		button.add(new JButton("B3"));
+		button.add(new JButton("B4"));
 		button.add(new JButton("C1"));
 		button.add(new JButton("C2"));
 		button.add(new JButton("C3"));
+		button.add(new JButton("C4"));
+		button.get(0).setBounds((1000/3),(610/3)-(610/4),90,90);           
+		button.get(1).setBounds((1000/3)+110,(610/3)-(610/4),90,90);                
+		button.get(2).setBounds((1000/3)+110+110,(610/3)-(610/4),90,90);              
+		button.get(3).setBounds((1000/3)+110+110+110,(610/3)-(610/4),90,90);
+		button.get(4).setBounds((1000/3),((610/3)-(610/4))+110,90,90);     
+		button.get(5).setBounds((1000/3)+110,((610/3)-(610/4))+110,90,90);          
+		button.get(6).setBounds((1000/3)+110+110,((610/3)-(610/4))+110,90,90);        
+		button.get(7).setBounds((1000/3)+110+110+110,((610/3)-(610/4))+110,90,90);
+		button.get(8).setBounds((1000/3),((610/3)-(610/4))+110+110,90,90); 
+		button.get(9).setBounds((1000/3)+110,((610/3)-(610/4))+110+110,90,90);     
+		button.get(10).setBounds((1000/3)+110+110,((610/3)-(610/4))+110+110,90,90);   
+		button.get(11).setBounds((1000/3)+110+110+110,((610/3)-(610/4))+110+110,90,90);
 		
-		button.get(0).setBounds((1000/3),(610/3)-(610/4),90,90);           button.get(1).setBounds((1000/3)+110,(610/3)-(610/4),90,90);                button.get(2).setBounds((1000/3)+110+110,(610/3)-(610/4),90,90);
-		button.get(3).setBounds((1000/3),((610/3)-(610/4))+110,90,90);     button.get(4).setBounds((1000/3)+110,((610/3)-(610/4))+110,90,90);          button.get(5).setBounds((1000/3)+110+110,((610/3)-(610/4))+110,90,90);
-		button.get(6).setBounds((1000/3),((610/3)-(610/4))+110+110,90,90); button.get(7).setBounds((1000/3)+110,((610/3)-(610/4))+110+110,90,90);      button.get(8).setBounds((1000/3)+110+110,((610/3)-(610/4))+110+110,90,90);
 		
-		for(int i = 0; i < 9; ++i) {			
+		for(int i = 0; i < 12; ++i) {			
 			button.get(i).setText(buttonSymbolRandomizer());
 			panel.add(button.get(i));
 		}
