@@ -3,6 +3,7 @@ package finalProject;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import javax.swing.BorderFactory;
@@ -22,12 +23,13 @@ public class TestGUI {
 	static JPanel panel = new JPanel();
 	static JLabel mainLabel = new JLabel(); 
 	
+	static ArrayList<JButton> optionButton = new ArrayList<JButton>();
+	
 	static JButton proceed = new JButton("Continue");
 	static JButton returnButton = new JButton("Return");
 	static JButton exit = new JButton("Exit"); 
 	
-	static JFormattedTextField textField = new JFormattedTextField();
-	static JFormattedTextField textField2 = new JFormattedTextField();
+	static ArrayList<JFormattedTextField> textField = new ArrayList<JFormattedTextField>();
 	
 	public static void main(String[] args) {
 		int h = 610, w = 1000; 
@@ -50,65 +52,58 @@ public class TestGUI {
 		testGUI();
 	}
 	
-	public static String buttonSymbolRandomizer() {
-		Random rand = new Random(); // TODO fix, not random enough
-	    int num = rand.nextInt(6);
-		String sym = "skipped";
-		
-		if(num == 0) {
-			sym = "!";
-		}
-		else if(num == 1) {
-			sym = "@";
-		}
-		else if(num == 2) {
-			sym = "#";
-		}
-		else if(num  == 3) {
-			sym = "$";
-		}
-		else if(num  == 4) {
-			sym = "%";
-		}
-		else if(num  == 5) {
-			sym = "&";
-		}
-		System.out.println(num);
-		return sym;
+	public static int random() { // pre-generate the symbols then randomize them 
+		Random rand = new Random();
+		int num = rand.nextInt(12);	    
+		return num;
 	}
 	
-	public static void testGUI() {
-		ArrayList<JButton> button = new ArrayList<JButton>();
+	public static void testGUI() {		
+		for(int i = 0; i < 3; ++i) {
+			for(int j = 0; j < 4; ++j) {
+				if(i == 0) {
+					optionButton.add(new JButton("A" + (j+1)));
+				}
+				else if(i == 1) {
+					optionButton.add(new JButton("B" + (j+1)));
+				}
+				else if(i == 2) {
+					optionButton.add(new JButton("C" + (j+1)));
+				}
+			}
+		}
 		
-		button.add(new JButton("A1"));
-		button.add(new JButton("A2"));
-		button.add(new JButton("A3"));
-		button.add(new JButton("A4"));
-		button.add(new JButton("B1"));
-		button.add(new JButton("B2"));
-		button.add(new JButton("B3"));
-		button.add(new JButton("B4"));
-		button.add(new JButton("C1"));
-		button.add(new JButton("C2"));
-		button.add(new JButton("C3"));
-		button.add(new JButton("C4"));
-		button.get(0).setBounds((1000/3),(610/3)-(610/4),90,90);           
-		button.get(1).setBounds((1000/3)+110,(610/3)-(610/4),90,90);                
-		button.get(2).setBounds((1000/3)+110+110,(610/3)-(610/4),90,90);              
-		button.get(3).setBounds((1000/3)+110+110+110,(610/3)-(610/4),90,90);
-		button.get(4).setBounds((1000/3),((610/3)-(610/4))+110,90,90);     
-		button.get(5).setBounds((1000/3)+110,((610/3)-(610/4))+110,90,90);          
-		button.get(6).setBounds((1000/3)+110+110,((610/3)-(610/4))+110,90,90);        
-		button.get(7).setBounds((1000/3)+110+110+110,((610/3)-(610/4))+110,90,90);
-		button.get(8).setBounds((1000/3),((610/3)-(610/4))+110+110,90,90); 
-		button.get(9).setBounds((1000/3)+110,((610/3)-(610/4))+110+110,90,90);     
-		button.get(10).setBounds((1000/3)+110+110,((610/3)-(610/4))+110+110,90,90);   
-		button.get(11).setBounds((1000/3)+110+110+110,((610/3)-(610/4))+110+110,90,90);
+		System.out.println("Total JButtons: " + optionButton.size());
+		optionButton.get(0).setBounds((1000/3)-75,(610/3)-(610/4),90,90);           
+		optionButton.get(1).setBounds(((1000/3)+110)-75,(610/3)-(610/4),90,90);                
+		optionButton.get(2).setBounds(((1000/3)+110+110)-75,(610/3)-(610/4),90,90);              
+		optionButton.get(3).setBounds(((1000/3)+110+110+110)-75,(610/3)-(610/4),90,90);
+		optionButton.get(4).setBounds((1000/3)-75,((610/3)-(610/4))+110,90,90);     
+		optionButton.get(5).setBounds(((1000/3)+110)-75,((610/3)-(610/4))+110,90,90);          
+		optionButton.get(6).setBounds(((1000/3)+110+110)-75,((610/3)-(610/4))+110,90,90);        
+		optionButton.get(7).setBounds(((1000/3)+110+110+110)-75,((610/3)-(610/4))+110,90,90);
+		optionButton.get(8).setBounds((1000/3)-75,((610/3)-(610/4))+110+110,90,90); 
+		optionButton.get(9).setBounds(((1000/3)+110)-75,((610/3)-(610/4))+110+110,90,90);     
+		optionButton.get(10).setBounds(((1000/3)+110+110)-75,((610/3)-(610/4))+110+110,90,90);   
+		optionButton.get(11).setBounds(((1000/3)+110+110+110)-75,((610/3)-(610/4))+110+110,90,90);
 		
+		optionButton.get(0).setText("!"); 
+		optionButton.get(1).setText("!");
+		optionButton.get(2).setText("@");
+		optionButton.get(3).setText("@");
+		optionButton.get(4).setText("#");
+		optionButton.get(5).setText("#");
+		optionButton.get(6).setText("$");
+		optionButton.get(7).setText("$");
+		optionButton.get(8).setText("%");
+		optionButton.get(9).setText("%");
+		optionButton.get(10).setText("&");
+		optionButton.get(11).setText("&");
 		
-		for(int i = 0; i < 12; ++i) {			
-			button.get(i).setText(buttonSymbolRandomizer());
-			panel.add(button.get(i));
+		Collections.shuffle(optionButton);
+		
+		for(JButton m: optionButton) {
+			panel.add(m);
 		}
 	}
 }

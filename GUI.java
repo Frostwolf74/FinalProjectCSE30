@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 public class GUI {
 	static Font Title = new Font("Arial", Font.PLAIN, 50);
@@ -20,16 +21,11 @@ public class GUI {
 	static JLabel secondaryLabel = new JLabel();
 	static JLabel tertiaryLabel = new JLabel();
 	
-	static JButton optionOne = new JButton();
-	static JButton optionTwo = new JButton();
-	static JButton optionThree = new JButton();
-	
-	static JButton proceed = new JButton("Continue");
-	static JButton returnButton = new JButton("Return");
+	static ArrayList<JButton> optionButton = new ArrayList<JButton>(); // saves memory and prevents bugs
+
 	static JButton exit = new JButton("Exit"); 
 	
-	static JFormattedTextField textField = new JFormattedTextField();
-	static JFormattedTextField textField2 = new JFormattedTextField();
+	static ArrayList<JFormattedTextField> textField = new ArrayList<JFormattedTextField>();
 	
 	public static void main(String[] args) {
 		int h = 610, w = 1000; 
@@ -43,16 +39,13 @@ public class GUI {
 		mainLabel.setVerticalAlignment(JLabel.TOP);
 		mainLabel.setBounds(10, 10, w-35, h-90); // border +10 px in
 		
-		proceed.setBounds(460,535,85,25);
-		returnButton.setBounds(560,535,85,25);
-		
 		panel.add(mainLabel);
 		mainLabel.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		mainMenu();
 	}
 	
-	public static void mainMenu() {
+	public static void mainMenu() { 
 		mainLabel.setFont(Title);		
 		mainLabel.setText ("<html> Java Minigames </html>");
 		mainLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -72,13 +65,13 @@ public class GUI {
 		exit.setBounds(460,535,85,25);
 		panel.add(exit);
 		
-		optionOne.setBounds(230, 425, 85, 25);
-		optionOne.setText("Choose");
-		panel.add(optionOne);
+		optionButton.add(new JButton("Choose"));
+		optionButton.get(0).setBounds(230, 425, 85, 25);
+		panel.add(optionButton.get(0));
 		
-		optionTwo.setBounds(690, 425, 85, 25);
-		optionTwo.setText("Choose");
-		panel.add(optionTwo);
+		optionButton.add(new JButton("Choose"));
+		optionButton.get(1).setBounds(690, 425, 85, 25);
+		panel.add(optionButton.get(1));
 		
 		panel.revalidate();
 		panel.repaint(); 
@@ -93,33 +86,23 @@ public class GUI {
 			}
 		);
 		
-		optionOne.addActionListener(
+		optionButton.get(0).addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					panel.remove(mainLabel);
-					panel.remove(secondaryLabel);
-					panel.remove(tertiaryLabel);
-					panel.remove(exit);
-					panel.remove(optionOne);
-					panel.remove(optionTwo);
-					optionOne.removeActionListener(this);
+					panel.removeAll(); // shortcut to clearing the panel
 					panel.repaint(); 
+					optionButton.clear(); // clear the arraylist after each function to save memory and reset buttons
 					Main.addPlayer(1);
 				}
 			}
 		);
 		
-		optionTwo.addActionListener(
+		optionButton.get(1).addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					panel.remove(mainLabel);
-					panel.remove(secondaryLabel);
-					panel.remove(tertiaryLabel);
-					panel.remove(exit);
-					panel.remove(optionOne);
-					panel.remove(optionTwo);
-					optionTwo.removeActionListener(this);
+					panel.removeAll();
 					panel.repaint(); 
+					optionButton.clear();
 					Main.addPlayer(2);
 				}
 			}
@@ -134,11 +117,14 @@ public class GUI {
 		mainLabel.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(mainLabel);
 		
-		proceed.setBounds(455,535,85,25);
-		panel.add(proceed);
 		
-		panel.add(textField);
-		textField.setBounds(455, 325, 85, 25);
+		optionButton.add(new JButton("proceed"));
+		optionButton.get(0).setBounds(455,535,85,25);
+		panel.add(optionButton.get(0));
+		
+		textField.add(new JFormattedTextField());
+		panel.add(textField.get(0));
+		textField.get(0).setBounds(455, 325, 85, 25);
 		
 		secondaryLabel.setText("<html> Enter a name </html>");
 		secondaryLabel.setFont(new Font("Arial", Font.ITALIC, 20));
@@ -148,27 +134,25 @@ public class GUI {
 		panel.repaint();
 		panel.revalidate();
 		
-		proceed.addActionListener(
+		optionButton.get(0).addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if (textField.getText().isEmpty()) {
+					if (textField.get(0).getText().isEmpty()) {
 						panel.add(secondaryLabel); // inform the user that they have not entered any text
 						panel.repaint();
 						panel.revalidate();
 					}
 					else {
-						panel.remove(mainLabel);
-						panel.remove(proceed);
-						panel.remove(textField);
-						panel.remove(secondaryLabel);
-						proceed.removeActionListener(this);
+						panel.removeAll();
 						panel.repaint();
 						panel.revalidate();
 						
-						String name = textField.getText();
+						String name = textField.get(0).getText();
 						newPlayer.setName(name);
 						newPlayer.setHighScoreGame1(0);
 						newPlayer.setHighScoreGame2(0);
+						optionButton.clear();
+						textField.clear();
 						Main.addNewPlayer(newPlayer);
 					}
 				}
@@ -180,7 +164,7 @@ public class GUI {
 	
 	public static void difficultyEasy(int game) {
 		difficulty = 1;
-		startGame(game);
+		startGame(game); // forced to do it like this due to java swing's non-asynchronous nature 
 	}
 	
 	public static void difficultyMedium(int game) {
@@ -201,62 +185,53 @@ public class GUI {
 		mainLabel.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(mainLabel);
 		
-		optionOne.setBounds(355, 325, 85, 25);
-		optionOne.setText("Easy");
-		panel.add(optionOne);
+		optionButton.add(new JButton("Easy"));
+		optionButton.get(0).setBounds(355, 325, 85, 25);
+		panel.add(optionButton.get(0));
 		
-		optionTwo.setBounds(455, 325, 85, 25);
-		optionTwo.setText("Medium");
-		panel.add(optionTwo);
+		optionButton.add(new JButton("Medium"));
+		optionButton.get(1).setBounds(455, 325, 85, 25);
+		panel.add(optionButton.get(1));
 		
-		optionThree.setBounds(555, 325, 85, 25);
-		optionThree.setText("Hard");
-		panel.add(optionThree);
+		optionButton.add(new JButton("Hard"));
+		optionButton.get(2).setBounds(555, 325, 85, 25);
+		panel.add(optionButton.get(2));
 		
 		panel.repaint();
 		panel.revalidate();
 		
-		optionOne.addActionListener(
+		optionButton.get(0).addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					panel.removeAll();
+					panel.repaint();
+					panel.revalidate();
+					optionButton.clear();
 					difficultyEasy(game);
-					panel.remove(optionOne);
-					panel.remove(optionTwo);
-					panel.remove(optionThree);
-					panel.remove(mainLabel);
-					optionOne.removeActionListener(this);
-					panel.repaint();
-					panel.revalidate();
 				}
 			}
 		);
 		
-		optionTwo.addActionListener(
+		optionButton.get(1).addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					panel.removeAll();
+					panel.repaint();
+					panel.revalidate();
+					optionButton.clear();
 					difficultyMedium(game);
-					panel.remove(optionOne);
-					panel.remove(optionTwo);
-					panel.remove(optionThree);
-					panel.remove(mainLabel);
-					optionTwo.removeActionListener(this);
-					panel.repaint();
-					panel.revalidate();
 				}
 			}
 		);
 		
-		optionThree.addActionListener(
+		optionButton.get(2).addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					difficultyHard(game);
-					panel.remove(optionOne);
-					panel.remove(optionTwo);
-					panel.remove(optionThree);
-					panel.remove(mainLabel);
-					optionThree.removeActionListener(this);
+					panel.removeAll();
 					panel.repaint();
 					panel.revalidate();
+					optionButton.clear();
+					difficultyHard(game);
 				}
 			}
 		);
@@ -274,7 +249,19 @@ public class GUI {
 	}
 
 	private static void memorizationGame(int inputDifficulty) {
-		JButton A1, A2, A3, B1, B2, B3, C1, C2, C3 = new JButton();
+		for(int i = 0; i < 3; ++i) {
+			for(int j = 0; j < 4; ++j) {
+				if(i == 1) {
+					optionButton.add(new JButton("A" + j));
+				}
+				else if(i == 2) {
+					optionButton.add(new JButton("B" + j));
+				}
+				else if(i == 3) {
+					optionButton.add(new JButton("C" + j));
+				}
+			}
+		}
 	}
 	
 	private static void sortingGame(int inputDifficulty) {
