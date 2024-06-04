@@ -18,9 +18,8 @@ public class GUI {
 	
 	static JFrame frame = new JFrame("Java Minigames");
 	static JPanel panel = new JPanel();
-	static JLabel mainLabel = new JLabel(); 
-	static JLabel secondaryLabel = new JLabel();
-	static JLabel tertiaryLabel = new JLabel();
+	
+	static ArrayList<JLabel> label = new ArrayList<JLabel>();
 	
 	static ArrayList<JButton> optionButton = new ArrayList<JButton>(); // saves memory and prevents bugs
 
@@ -122,6 +121,7 @@ public class GUI {
 		optionButton.add(new JButton("proceed"));
 		optionButton.get(0).setBounds(455,535,85,25);
 		panel.add(optionButton.get(0));
+		optionButton.requestFocus(); // sets focus on button so enter key can be used to activate it 
 		
 		textField.add(new JFormattedTextField());
 		panel.add(textField.get(0));
@@ -181,6 +181,21 @@ public class GUI {
 	public static void difficulty(int game) {
 		// TODO add information about each game mode
 
+		label.add(new JLabel());
+		label.add(new JLabel());
+		label.add(new JLabel());
+//		label.add(new JLabel());
+		label.get(0).setText("Easy: 3x4 square, no time limit, mistake limit is 10");
+		label.get(0).setBounds(910/4, 300, 300, 200);
+		label.get(1).setText("Medium: 4x5 square, no time limit, mistake limit is 5");
+		label.get(1).setBounds((910/4)+250, 300, 300, 200);
+		label.get(2).setText("Hard: 6x7 square, no time limit, mistake limit is 3");
+		label.get(2).setBounds((910/4)+500, 300, 300, 200);
+//		label.get(3).setText("Hardcore: 8x8 square, time limit is 6 seconds and is increased by 3 seconds each time a pair is located, no mistake limit");
+//		label.get(3).setBounds();
+
+
+		
 		mainLabel.setFont(SubTitle);		
 		mainLabel.setText ("<html> Select Difficulty </html>");
 		mainLabel.setHorizontalAlignment(JLabel.CENTER);
