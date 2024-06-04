@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GUI {
 	static Font Title = new Font("Arial", Font.PLAIN, 50);
@@ -249,19 +250,68 @@ public class GUI {
 	}
 
 	private static void memorizationGame(int inputDifficulty) {
+		panel.add(mainLabel);
+		mainLabel.setText(null);
+		
 		for(int i = 0; i < 3; ++i) {
 			for(int j = 0; j < 4; ++j) {
-				if(i == 1) {
-					optionButton.add(new JButton("A" + j));
+				if(i == 0) {
+					optionButton.add(new JButton("A" + (j+1)));
+				}
+				else if(i == 1) {
+					optionButton.add(new JButton("B" + (j+1)));
 				}
 				else if(i == 2) {
-					optionButton.add(new JButton("B" + j));
-				}
-				else if(i == 3) {
-					optionButton.add(new JButton("C" + j));
+					optionButton.add(new JButton("C" + (j+1)));
 				}
 			}
 		}
+
+		int baseX = (1000/3)-25;
+        int baseY = (610/3)-(610/4);
+        int width = 90;
+        int height = 90;
+        int offsetX = 110;
+        int offsetY = 110;
+
+        for(int i = 0; i < 12; i++) {
+            int x = baseX + (i % 4) * offsetX;
+            int y = baseY + (i / 4) * offsetY;
+            optionButton.get(i).setBounds(x, y, width, height);
+        }
+		
+		optionButton.get(0).setText("!"); 
+		optionButton.get(1).setText("!");
+		optionButton.get(2).setText("@");
+		optionButton.get(3).setText("@");
+		optionButton.get(4).setText("#");
+		optionButton.get(5).setText("#");
+		optionButton.get(6).setText("$");
+		optionButton.get(7).setText("$");
+		optionButton.get(8).setText("%");
+		optionButton.get(9).setText("%");
+		optionButton.get(10).setText("&");
+		optionButton.get(11).setText("&");
+
+        String[] symbols = {"!","!","@","@","#","#","$","$","%","%","&","&"};
+        Random rand = new Random();
+        String temp;
+        for (int i = symbols.length - 1; i > 0; i--) {
+            // Generate a random index between 0 and i (inclusive)
+            int j = rand.nextInt(i + 1);
+
+            // Swap the elements at indices i and j
+            temp = symbols[i];
+            symbols[i] = symbols[j];
+            symbols[j] = temp;
+        }
+        
+        for(int i = 0; i < 12; ++i) {
+            optionButton.get(i).setText(symbols[i]);
+            panel.add(optionButton.get(i));
+        }
+        
+        // create a timer that when finished hides the buttons
 	}
 	
 	private static void sortingGame(int inputDifficulty) {

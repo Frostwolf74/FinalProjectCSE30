@@ -99,11 +99,23 @@ public class TestGUI {
 		optionButton.get(9).setText("%");
 		optionButton.get(10).setText("&");
 		optionButton.get(11).setText("&");
-		
-		Collections.shuffle(optionButton);
-		
-		for(JButton m: optionButton) {
-			panel.add(m);
-		}
+
+        String[] symbols = {"!","!","@","@","#","#","$","$","%","%","&","&"};
+        Random rand = new Random();
+        String temp;
+        for (int i = symbols.length - 1; i > 0; i--) {
+            // Generate a random index between 0 and i (inclusive)
+            int j = rand.nextInt(i + 1);
+
+            // Swap the elements at indices i and j
+            temp = symbols[i];
+            symbols[i] = symbols[j];
+            symbols[j] = temp;
+        }
+        
+        for(int i = 0; i < 12; ++i) {
+            optionButton.get(i).setText(symbols[i]);
+            panel.add(optionButton.get(i));
+        }
 	}
 }
