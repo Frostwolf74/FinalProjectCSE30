@@ -5,10 +5,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GUI {
 	static Font Title = new Font("Arial", Font.PLAIN, 50);
@@ -19,9 +19,13 @@ public class GUI {
 	static JFrame frame = new JFrame("Java Minigames");
 	static JPanel panel = new JPanel();
 	
-	static ArrayList<JLabel> label = new ArrayList<JLabel>();
+	static JLabel mainLabel = new JLabel();
+	static JLabel label2 = new JLabel();
+	static JLabel label3 = new JLabel();
+	static JLabel label4 = new JLabel();
+	static JLabel label5 = new JLabel();
 	
-	static ArrayList<JButton> optionButton = new ArrayList<JButton>(); // saves memory and prevents bugs
+	static ArrayList<JButton> optionButton = new ArrayList<JButton>(); // saves memory and prevents bugs, all buttons are deleted after a function is completed 
 
 	static JButton exit = new JButton("Exit"); 
 	
@@ -50,17 +54,17 @@ public class GUI {
 		mainLabel.setText ("<html> Java Minigames </html>");
 		mainLabel.setHorizontalAlignment(JLabel.CENTER);
 		
-		secondaryLabel.setFont(SubTitle);
-		secondaryLabel.setText("<html> Memorization Game </html>");
-		secondaryLabel.setHorizontalAlignment(JLabel.LEFT);
-		secondaryLabel.setBounds(180, 300, 300, 200);
-		panel.add(secondaryLabel);
+		label2.setFont(SubTitle);
+		label2.setText("<html> Memorization Game </html>");
+		label2.setHorizontalAlignment(JLabel.LEFT);
+		label2.setBounds(180, 300, 300, 200);
+		panel.add(label2);
 		
-		tertiaryLabel.setFont(SubTitle);
-		tertiaryLabel.setText("<html> Sorting Game </html>");
-		tertiaryLabel.setHorizontalAlignment(JLabel.RIGHT);
-		tertiaryLabel.setBounds(510, 300, 300, 200);
-		panel.add(tertiaryLabel);
+		label3.setFont(SubTitle);
+		label3.setText("<html> Sorting Game </html>");
+		label3.setHorizontalAlignment(JLabel.RIGHT);
+		label3.setBounds(510, 300, 300, 200);
+		panel.add(label3);
 		
 		exit.setBounds(460,535,85,25);
 		panel.add(exit);
@@ -120,17 +124,19 @@ public class GUI {
 		
 		optionButton.add(new JButton("proceed"));
 		optionButton.get(0).setBounds(455,535,85,25);
-		panel.add(optionButton.get(0));
-		optionButton.requestFocus(); // sets focus on button so enter key can be used to activate it 
+		panel.add(optionButton.get(0)); 
+		frame.getRootPane().setDefaultButton(optionButton.get(0));
+		optionButton.get(0).requestFocusInWindow(); 
 		
 		textField.add(new JFormattedTextField());
-		panel.add(textField.get(0));
 		textField.get(0).setBounds(455, 325, 85, 25);
+		panel.add(textField.get(0));
+		textField.get(0).requestFocus();
 		
-		secondaryLabel.setText("<html> Enter a name </html>");
-		secondaryLabel.setFont(new Font("Arial", Font.ITALIC, 20));
-		secondaryLabel.setBounds(440, 265, 300, 200);
-		secondaryLabel.setForeground(Color.RED);
+		label2.setText("<html> Enter a name </html>");
+		label2.setFont(new Font("Arial", Font.ITALIC, 20));
+		label2.setBounds(440, 265, 300, 200);
+		label2.setForeground(Color.RED);
 		
 		panel.repaint();
 		panel.revalidate();
@@ -139,7 +145,7 @@ public class GUI {
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (textField.get(0).getText().isEmpty()) {
-						panel.add(secondaryLabel); // inform the user that they have not entered any text
+						panel.add(label2); // inform the user that they have not entered any text
 						panel.repaint();
 						panel.revalidate();
 					}
@@ -181,18 +187,14 @@ public class GUI {
 	public static void difficulty(int game) {
 		// TODO add information about each game mode
 
-		label.add(new JLabel());
-		label.add(new JLabel());
-		label.add(new JLabel());
-//		label.add(new JLabel());
-		label.get(0).setText("Easy: 3x4 square, no time limit, mistake limit is 10");
-		label.get(0).setBounds(910/4, 300, 300, 200);
-		label.get(1).setText("Medium: 4x5 square, no time limit, mistake limit is 5");
-		label.get(1).setBounds((910/4)+250, 300, 300, 200);
-		label.get(2).setText("Hard: 6x7 square, no time limit, mistake limit is 3");
-		label.get(2).setBounds((910/4)+500, 300, 300, 200);
-//		label.get(3).setText("Hardcore: 8x8 square, time limit is 6 seconds and is increased by 3 seconds each time a pair is located, no mistake limit");
-//		label.get(3).setBounds();
+		label2.setText("Easy: 3x4 square, no time limit, mistake limit is 10");
+		label2.setBounds(910/4, 300, 300, 200);
+		label3.setText("Medium: 4x5 square, no time limit, mistake limit is 5");
+		label3.setBounds((910/4)+250, 300, 300, 200);
+		label4.setText("Hard: 6x7 square, no time limit, mistake limit is 3");
+		label4.setBounds((910/4)+500, 300, 300, 200);
+//		label5.setText("Hardcore: 8x8 square, time limit is 6 seconds and is increased by 3 seconds each time a pair is located, no mistake limit");
+//		label5.setBounds();
 
 
 		
@@ -294,28 +296,13 @@ public class GUI {
             int y = baseY + (i / 4) * offsetY;
             optionButton.get(i).setBounds(x, y, width, height);
         }
-		
-		optionButton.get(0).setText("!"); 
-		optionButton.get(1).setText("!");
-		optionButton.get(2).setText("@");
-		optionButton.get(3).setText("@");
-		optionButton.get(4).setText("#");
-		optionButton.get(5).setText("#");
-		optionButton.get(6).setText("$");
-		optionButton.get(7).setText("$");
-		optionButton.get(8).setText("%");
-		optionButton.get(9).setText("%");
-		optionButton.get(10).setText("&");
-		optionButton.get(11).setText("&");
 
-        String[] symbols = {"!","!","@","@","#","#","$","$","%","%","&","&"};
+        String[] symbols = {"!","!","@","@","#","#","$","$","%","%","&","&"}; // pre-generate the symbols the shuffle them randomly
         Random rand = new Random();
         String temp;
-        for (int i = symbols.length - 1; i > 0; i--) {
-            // Generate a random index between 0 and i (inclusive)
-            int j = rand.nextInt(i + 1);
+        for (int i = 0; i < symbols.length - 1; ++i) {
+            int j = rand.nextInt(i+1);
 
-            // Swap the elements at indices i and j
             temp = symbols[i];
             symbols[i] = symbols[j];
             symbols[j] = temp;
@@ -326,9 +313,35 @@ public class GUI {
             panel.add(optionButton.get(i));
         }
         
-        // create a timer that when finished hides the buttons
+        Timer timer = new Timer();
+        
+        timer.schedule(new TimerTask() { // hide all of the text after a second and half
+        	@Override
+        	public void run() {
+        		for(JButton i: optionButton) {
+        			i.setText(null);
+        			panel.repaint();
+        			panel.revalidate();
+        		}
+        	}
+        }, 1500);        
+        
+        final ArrayList<ActionEvent> buttonPressed = new ArrayList<ActionEvent>(); 
+        
+        for (int i = 0; i < 12; i++) { // instantiated action listeners to shorten code, when a user clicks a button the symbol assigned to it will reappear 
+            final int final_i = i;
+            optionButton.get(i).addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    optionButton.get(final_i).setText(symbols[final_i]);
+                    buttonPressed.add(e);
+                    System.out.println(buttonPressed.get(final_i).getSource()); // XXX debug
+                    System.out.println("\nbuttonPressed length: " + buttonPressed.size() + "\n"); // XXX debug
+                }
+            });
+        }
+        
 	}
-	
+
 	private static void sortingGame(int inputDifficulty) {
 		// TODO complete
 	}
