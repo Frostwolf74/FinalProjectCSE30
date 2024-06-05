@@ -310,6 +310,7 @@ public class GUI {
         
         for(int i = 0; i < 12; ++i) {
             optionButton.get(i).setText(symbols[i]);
+            optionButton.get(i).setEnabled(false);
             panel.add(optionButton.get(i));
         }
         
@@ -320,26 +321,43 @@ public class GUI {
         	public void run() {
         		for(JButton i: optionButton) {
         			i.setText(null);
+        			i.setEnabled(true);
         			panel.repaint();
         			panel.revalidate();
         		}
         	}
         }, 1500);        
         
-        final ArrayList<ActionEvent> buttonPressed = new ArrayList<ActionEvent>(); 
+        String lastButtonPressed[] = new String[2];
         
-        for (int i = 0; i < 12; i++) { // instantiated action listeners to shorten code, when a user clicks a button the symbol assigned to it will reappear 
-            final int final_i = i;
-            optionButton.get(i).addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    optionButton.get(final_i).setText(symbols[final_i]);
-                    buttonPressed.add(e);
-                    System.out.println(buttonPressed.get(final_i).getSource()); // XXX debug
-                    System.out.println("\nbuttonPressed length: " + buttonPressed.size() + "\n"); // XXX debug
-                }
-            });
+        for (int i = 0; i < 12; ++i) { // instantiated action listeners to shorten code, when a user clicks a button the symbol assigned to it will reappear 
+        	final int final_i = i;
+        	optionButton.get(i).addActionListener(new ActionListener() {
+        		public static int totalButtonPresses=0;
+        		public static int totalMatches=0;
+
+        		public void actionPerformed(ActionEvent e) {
+        			optionButton.get(final_i).setText(symbols[final_i]);
+        			optionButton.get(final_i).setEnabled(false);
+
+        			lastButtonPressed[totalButtonPresses] = optionButton.get(final_i).getText(); 
+        			++totalButtonPresses;
+
+        			if((lastButtonPressed[0] != null) && (lastButtonPressed[1] != null)) {
+        				if(lastButtonPressed[0] == lastButtonPressed[1]) {
+        					System.out.println("matched");
+        					++totalMatches;
+        				}
+        				else {
+        					System.out.println("no match");
+        				}
+        				totalButtonPresses=0;
+        				lastButtonPressed[0] = null;
+        				lastButtonPressed[1] = null;
+        			}
+        		}
+        	});
         }
-        
 	}
 
 	private static void sortingGame(int inputDifficulty) {

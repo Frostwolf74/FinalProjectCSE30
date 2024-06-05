@@ -2,10 +2,15 @@ package finalProject;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -59,6 +64,9 @@ public class TestGUI {
 	}
 	
 	public static void testGUI() {		
+		panel.add(mainLabel);
+		mainLabel.setText(null);
+		
 		for(int i = 0; i < 3; ++i) {
 			for(int j = 0; j < 4; ++j) {
 				if(i == 0) {
@@ -72,42 +80,26 @@ public class TestGUI {
 				}
 			}
 		}
-		
-		System.out.println("Total JButtons: " + optionButton.size());
-		optionButton.get(0).setBounds((1000/3)-75,(610/3)-(610/4),90,90);           
-		optionButton.get(1).setBounds(((1000/3)+110)-75,(610/3)-(610/4),90,90);                
-		optionButton.get(2).setBounds(((1000/3)+110+110)-75,(610/3)-(610/4),90,90);              
-		optionButton.get(3).setBounds(((1000/3)+110+110+110)-75,(610/3)-(610/4),90,90);
-		optionButton.get(4).setBounds((1000/3)-75,((610/3)-(610/4))+110,90,90);     
-		optionButton.get(5).setBounds(((1000/3)+110)-75,((610/3)-(610/4))+110,90,90);          
-		optionButton.get(6).setBounds(((1000/3)+110+110)-75,((610/3)-(610/4))+110,90,90);        
-		optionButton.get(7).setBounds(((1000/3)+110+110+110)-75,((610/3)-(610/4))+110,90,90);
-		optionButton.get(8).setBounds((1000/3)-75,((610/3)-(610/4))+110+110,90,90); 
-		optionButton.get(9).setBounds(((1000/3)+110)-75,((610/3)-(610/4))+110+110,90,90);     
-		optionButton.get(10).setBounds(((1000/3)+110+110)-75,((610/3)-(610/4))+110+110,90,90);   
-		optionButton.get(11).setBounds(((1000/3)+110+110+110)-75,((610/3)-(610/4))+110+110,90,90);
-		
-		optionButton.get(0).setText("!"); 
-		optionButton.get(1).setText("!");
-		optionButton.get(2).setText("@");
-		optionButton.get(3).setText("@");
-		optionButton.get(4).setText("#");
-		optionButton.get(5).setText("#");
-		optionButton.get(6).setText("$");
-		optionButton.get(7).setText("$");
-		optionButton.get(8).setText("%");
-		optionButton.get(9).setText("%");
-		optionButton.get(10).setText("&");
-		optionButton.get(11).setText("&");
 
-        String[] symbols = {"!","!","@","@","#","#","$","$","%","%","&","&"};
+		int baseX = (1000/3)-25;
+        int baseY = (610/3)-(610/4);
+        int width = 90;
+        int height = 90;
+        int offsetX = 110;
+        int offsetY = 110;
+
+        for(int i = 0; i < 12; i++) {
+            int x = baseX + (i % 4) * offsetX;
+            int y = baseY + (i / 4) * offsetY;
+            optionButton.get(i).setBounds(x, y, width, height);
+        }
+
+        String[] symbols = {"!","!","@","@","#","#","$","$","%","%","&","&"}; // pre-generate the symbols the shuffle them randomly
         Random rand = new Random();
         String temp;
-        for (int i = symbols.length - 1; i > 0; i--) {
-            // Generate a random index between 0 and i (inclusive)
-            int j = rand.nextInt(i + 1);
+        for (int i = 0; i < symbols.length - 1; ++i) {
+            int j = rand.nextInt(i+1);
 
-            // Swap the elements at indices i and j
             temp = symbols[i];
             symbols[i] = symbols[j];
             symbols[j] = temp;
@@ -115,7 +107,51 @@ public class TestGUI {
         
         for(int i = 0; i < 12; ++i) {
             optionButton.get(i).setText(symbols[i]);
+            optionButton.get(i).setEnabled(false);
             panel.add(optionButton.get(i));
         }
-	}
+        
+        Timer timer = new Timer();
+        
+        timer.schedule(new TimerTask() { // hide all of the text after a second and half
+        	@Override
+        	public void run() {
+        		for(JButton i: optionButton) {
+        			i.setText(null);
+        			i.setEnabled(true);
+        			panel.repaint();
+        			panel.revalidate();
+        		}
+        	}
+        }, 1500);        
+        
+        String lastButtonPressed[] = new String[2];
+        
+        for (int i = 0; i < 12; ++i) { // instantiated action listeners to shorten code, when a user clicks a button the symbol assigned to it will reappear 
+            final int final_i = i;
+            optionButton.get(i).addActionListener(new ActionListener() {
+            	public static int totalButtonPresses=0;
+            	
+            	public void actionPerformed(ActionEvent e) {
+                    optionButton.get(final_i).setText(symbols[final_i]);
+                    optionButton.get(final_i).setEnabled(false);
+
+                    lastButtonPressed[totalButtonPresses] = optionButton.get(final_i).getText(); 
+                    ++totalButtonPresses;
+                    
+                    if((lastButtonPressed[0] != null) && (lastButtonPressed[1] != null)) {
+                    	if(lastButtonPressed[0] == lastButtonPressed[1]) {
+                    		System.out.println("matched");
+                    	}
+                    	else {
+                    		System.out.println("no match");
+                    	}
+                    	totalButtonPresses=0;
+                    	lastButtonPressed[0] = null;
+                    	lastButtonPressed[1] = null;
+                    }
+            	}
+            });
+        }
+     }
 }
