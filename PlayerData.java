@@ -2,13 +2,13 @@ package finalProject;
 
 public class PlayerData {
 	private String name;
-	private int highScoreGame1;
-	private int highScoreGame2;
+	private int scoreGame1;
+	private int scoreGame2;
 
-	public PlayerData(String name, int highScoreGame1, int highScoreGame2) {
+	public PlayerData(String name, int[] score, long[] time, int[] difficultyCompleted, int[] gameCompleted) {
 		this.name = name;
-		this.highScoreGame1 = highScoreGame1;
-		this.highScoreGame2 = highScoreGame2;
+		this.scoreGame1 = scoreGame1;
+		this.scoreGame2 = scoreGame2;
 	}
 	
 	public PlayerData(){}
@@ -22,18 +22,18 @@ public class PlayerData {
 	}
 
 	public int getHighScoreGame1() {
-		return highScoreGame1;
+		return scoreGame1;
 	}
 
-	public void setHighScoreGame1(int highScore) {
-		this.highScoreGame1 = highScore;
+	public void setHighScoreGame1(int score) {
+		this.scoreGame1 = score;
 	}
 	
 	public int getHighScoreGame2() {
-		return highScoreGame2;
+		return scoreGame2;
 	}
 
-	public void setHighScoreGame2(int highScore) {
-		this.highScoreGame2 = highScore;
+	public void setHighScoreGame2(int score) {
+		this.scoreGame2 = score;
 	}
 }

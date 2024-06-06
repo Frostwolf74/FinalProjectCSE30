@@ -36,7 +36,7 @@ public class TestGUI {
 	
 	static ArrayList<JFormattedTextField> textField = new ArrayList<JFormattedTextField>();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		int h = 610, w = 1000; 
 
 		frame.setSize(w,h); // window size
@@ -54,7 +54,7 @@ public class TestGUI {
 		panel.add(mainLabel);
 		mainLabel.setBorder(BorderFactory.createLineBorder(Color.black));
 		
-		testGUI();
+		testGUI(3);
 	}
 	
 	public static int random() { // pre-generate the symbols then randomize them 
@@ -63,38 +63,90 @@ public class TestGUI {
 		return num;
 	}
 	
-	public static void testGUI() {		
+	public static void testGUI(int inputDifficulty) throws Exception {		
+		frame.setSize(1920,1080);
+		mainLabel.setBounds(10, 10, 1920-35, 1080-90);
 		panel.add(mainLabel);
 		mainLabel.setText(null);
 		
-		for(int i = 0; i < 3; ++i) {
-			for(int j = 0; j < 4; ++j) {
-				if(i == 0) {
+		int columns = 0;
+		int rows = 0;		
+		int totalButtons = 0;
+		
+		// pre-generate the symbols the shuffle them randomly
+        String[] symbols = new String[42]; 
+        if(inputDifficulty == 1) {
+        	symbols = new String[]{"!","!","@","@","#","#","$","$","%","%","&","&"};
+        	columns = 3;
+			rows = 4;
+			totalButtons = 12;
+        }
+        else if(inputDifficulty == 2) {
+        	symbols = new String[]{"!","!","@","@","#","#","$","$","%","%","&","&","*","*","+","+","~","~","=","="};
+        	columns = 4;
+			rows = 5;
+			totalButtons = 20;
+        }
+        else if(inputDifficulty == 3) {
+        	symbols = new String[]{"!","!","@","@","#","#","$","$","%","%","&","&","*","*","+","+","~","~","=","=","♦","♦","•","•","○","○","►","►","◄","◄","§","§","▬","▬","▲","▲","▼","▼","▓","▓","×","×"}; 
+        	columns = 6;
+        	rows = 7;
+        	totalButtons = 42;
+        }
+        String[] symbols1 = symbols; // making string effectively final
+		
+		for(int i = 0; i < columns; ++i) {
+			for(int j = 0; j < rows; ++j) {
+				switch(i) {
+				case 0:
 					optionButton.add(new JButton("A" + (j+1)));
-				}
-				else if(i == 1) {
+					break;
+				case 1:
 					optionButton.add(new JButton("B" + (j+1)));
-				}
-				else if(i == 2) {
+					break;
+				case 2:
 					optionButton.add(new JButton("C" + (j+1)));
+					break;
+				case 3:
+					optionButton.add(new JButton("D" + (j+1)));
+					break;
+				case 4:
+					optionButton.add(new JButton("E" + (j+1)));
+					break;
+				case 5:
+					optionButton.add(new JButton("F" + (j+1)));
+					break;
+				case 6:
+					optionButton.add(new JButton("G" + (j+1)));
+					break;
+				default:
+					throw new Exception("Out of bounds for length 7");
 				}
 			}
 		}
-
-		int baseX = (1000/3)-25;
-        int baseY = (610/3)-(610/4);
+		
+		int baseX = 40;
+        int baseY = 40;
         int width = 90;
         int height = 90;
         int offsetX = 110;
         int offsetY = 110;
 
-        for(int i = 0; i < 12; i++) {
-            int x = baseX + (i % 4) * offsetX;
-            int y = baseY + (i / 4) * offsetY;
+        for(int i = 0; i < totalButtons; i++) {
+            int x = baseX + (i % columns) * offsetX;
+            int y = baseY + (i / columns) * offsetY;
             optionButton.get(i).setBounds(x, y, width, height);
         }
-
-        String[] symbols = {"!","!","@","@","#","#","$","$","%","%","&","&"}; // pre-generate the symbols the shuffle them randomly
+        
+        for(int i = 0; i < totalButtons; ++i) {
+        	panel.add(optionButton.get(i));
+        }
+        
+        frame.setSize(((optionButton.get(optionButton.size()-1).getBounds().x - optionButton.get(0).getBounds().x)+optionButton.get(0).getWidth())+110, (optionButton.get(optionButton.size()-1).getBounds().y - optionButton.get(0).getBounds().y)+40+110+90);
+        frame.setLocation(((1920/2)-(frame.getBounds().x)/2)-130, ((frame.getBounds().y)/2)-80);
+        
+        mainLabel.setBounds(20, 20, (optionButton.get(optionButton.size()-1).getBounds().x - optionButton.get(0).getBounds().x)+optionButton.get(0).getWidth()+40, (optionButton.get(optionButton.size()-1).getBounds().y - optionButton.get(0).getBounds().y)+40+90);
+        
         Random rand = new Random();
         String temp;
         for (int i = 0; i < symbols.length - 1; ++i) {
@@ -105,7 +157,7 @@ public class TestGUI {
             symbols[j] = temp;
         }
         
-        for(int i = 0; i < 12; ++i) {
+        for(int i = 0; i < totalButtons; ++i) {
             optionButton.get(i).setText(symbols[i]);
             optionButton.get(i).setEnabled(false);
             panel.add(optionButton.get(i));
@@ -127,31 +179,43 @@ public class TestGUI {
         
         String lastButtonPressed[] = new String[2];
         
-        for (int i = 0; i < 12; ++i) { // instantiated action listeners to shorten code, when a user clicks a button the symbol assigned to it will reappear 
-            final int final_i = i;
-            optionButton.get(i).addActionListener(new ActionListener() {
-            	public static int totalButtonPresses=0;
-            	
-            	public void actionPerformed(ActionEvent e) {
-                    optionButton.get(final_i).setText(symbols[final_i]);
-                    optionButton.get(final_i).setEnabled(false);
+        for (int i = 0; i < totalButtons; ++i) { // instantiated action listeners to shorten code, when a user clicks a button the symbol assigned to it will reappear 
+        	final int final_i = i;
+        	optionButton.get(i).addActionListener(new ActionListener() {
+        		public static int totalButtonPresses=0;
+        		public static int totalMatches=0;
 
-                    lastButtonPressed[totalButtonPresses] = optionButton.get(final_i).getText(); 
-                    ++totalButtonPresses;
-                    
-                    if((lastButtonPressed[0] != null) && (lastButtonPressed[1] != null)) {
-                    	if(lastButtonPressed[0] == lastButtonPressed[1]) {
-                    		System.out.println("matched");
-                    	}
-                    	else {
-                    		System.out.println("no match");
-                    	}
-                    	totalButtonPresses=0;
-                    	lastButtonPressed[0] = null;
-                    	lastButtonPressed[1] = null;
-                    }
-            	}
-            });
+        		public void actionPerformed(ActionEvent e) {
+        			optionButton.get(final_i).setText(symbols1[final_i]);
+        			optionButton.get(final_i).setEnabled(false);
+
+        			lastButtonPressed[totalButtonPresses] = optionButton.get(final_i).getText(); 
+        			++totalButtonPresses;
+
+        			if((lastButtonPressed[0] != null) && (lastButtonPressed[1] != null)) {
+        				if(lastButtonPressed[0] == lastButtonPressed[1]) {
+        					System.out.println("matched");
+        					++totalMatches;
+        				}
+        				else {
+        					System.out.println("no match");
+        				}
+        				totalButtonPresses=0;
+        				lastButtonPressed[0] = null;
+        				lastButtonPressed[1] = null;
+        			}
+        			
+        			if(inputDifficulty == 1) { // 1 match required to pass
+        				
+        			}
+        			else if(inputDifficulty == 2) { // 
+        				
+        			}
+        			else if(inputDifficulty == 3) {
+        				
+        			}
+        		}
+        	});
         }
-     }
+	}
 }
