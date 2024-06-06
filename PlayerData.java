@@ -1,14 +1,21 @@
 package finalProject;
 
-public class PlayerData {
-	private String name;
-	private int scoreGame1;
-	private int scoreGame2;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-	public PlayerData(String name, int[] score, long[] time, int[] difficultyCompleted, int[] gameCompleted) {
+public class PlayerData {	
+	private String name;
+	private int[] score = new int[2];
+	private long[] time = new long[2];
+	private int[] difficulty = new int[2];
+
+	public PlayerData(String name, int[] score, long[] time, int[] difficulty) {
 		this.name = name;
-		this.scoreGame1 = scoreGame1;
-		this.scoreGame2 = scoreGame2;
+		this.score = score;
+		this.time = time;
+		this.difficulty = difficulty;
 	}
 	
 	public PlayerData(){}
@@ -21,19 +28,37 @@ public class PlayerData {
 		this.name = name;
 	}
 
-	public int getHighScoreGame1() {
-		return scoreGame1;
+	public int getScore(int game) {
+		return score[game];
 	}
 
-	public void setHighScoreGame1(int score) {
-		this.scoreGame1 = score;
+	public void setScore(int score, int game) {
+		this.score[game] = score;
+	}
+
+	public long getTime(int game) {
+		return time[game];
+	}
+
+	public void setTime(long time, int game) {
+		this.time[game] = time;
+	}
+
+	public int getDifficulty(int game) {
+		return difficulty[game];
+	}
+
+	public void setDifficulty(int difficulty, int game) {
+		this.difficulty[game] = difficulty;
 	}
 	
-	public int getHighScoreGame2() {
-		return scoreGame2;
-	}
-
-	public void setHighScoreGame2(int score) {
-		this.scoreGame2 = score;
+	public String toString() {
+		return "Name: " + name 
+				+ "\nMemorization game score: " + score[0] 
+				+ "\nDifficulty completed: " + difficulty[0] 
+				+ "\nTime taken to complete: " + time[0]/1000 + " seconds" 
+				+ "\nSorting game score: " + score[1]
+				+ "\nDifficulty completed: " + difficulty[1] 
+				+ "\nTime taken to complete: " + time[1]/1000 + " seconds" ;
 	}
 }

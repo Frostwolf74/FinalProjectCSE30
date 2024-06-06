@@ -31,6 +31,8 @@ public class GUI {
 	
 	static ArrayList<JFormattedTextField> textField = new ArrayList<JFormattedTextField>();
 	
+	static PlayerData currentPlayer;
+	
 	public static void mainMenu() { 
 		int h = 610, w = 1000; 
 
@@ -153,8 +155,6 @@ public class GUI {
 						String name = textField.get(0).getText();
 						frame.setTitle(frame.getTitle() + " (" + name + ")");
 						newPlayer.setName(name);
-						newPlayer.setHighScoreGame1(0);
-						newPlayer.setHighScoreGame2(0);
 						optionButton.clear();
 						textField.clear();
 						Main.addNewPlayer(newPlayer, game);
@@ -272,6 +272,8 @@ public class GUI {
         	rows = 7;
         	totalButtons = 42;
         }
+        final int columnsFinal = columns; // making variables final to be accessed in action listener 
+        final int rowsFinal = rows;
         String[] symbols1 = symbols; // making string effectively final
 		
 		for(int i = 0; i < columns; ++i) {
@@ -298,9 +300,6 @@ public class GUI {
 				case 6:
 					optionButton.add(new JButton("G" + (j+1)));
 					break;
-				default:
-					System.out.println("Out of bounds for length 7");
-					break;
 				}
 			}
 		}
@@ -323,7 +322,7 @@ public class GUI {
         }
         
         frame.setSize(((optionButton.get(optionButton.size()-1).getBounds().x - optionButton.get(0).getBounds().x)+optionButton.get(0).getWidth())+110, (optionButton.get(optionButton.size()-1).getBounds().y - optionButton.get(0).getBounds().y)+40+110+90);
-        frame.setLocation(((1920/2)-(frame.getBounds().x)/2)-130, ((frame.getBounds().y)/2)-80);
+        frame.setLocation(500,250);
         
         mainLabel.setBounds(20, 20, (optionButton.get(optionButton.size()-1).getBounds().x - optionButton.get(0).getBounds().x)+optionButton.get(0).getWidth()+40, (optionButton.get(optionButton.size()-1).getBounds().y - optionButton.get(0).getBounds().y)+40+90);
         
@@ -366,16 +365,18 @@ public class GUI {
         	final long startTime1 = startTime;
         	optionButton.get(i).addActionListener(new ActionListener() {
         		public static int totalButtonPresses=0;
+        		public static int buttonPresses=0;
         		public static int totalMatches=0;
 
         		public void actionPerformed(ActionEvent e) {
         			optionButton.get(final_i).setText(symbols1[final_i]);
         			optionButton.get(final_i).setEnabled(false);
 
-        			lastButtonPressed[totalButtonPresses] = optionButton.get(final_i).getText(); 
+        			lastButtonPressed[buttonPresses] = optionButton.get(final_i).getText(); 
         			++totalButtonPresses;
+        			++buttonPresses;
 
-        			if((lastButtonPressed[0] != null) && (lastButtonPressed[1] != null)) {
+        			if((lastButtonPressed[0] != null) && (lastButtonPressed[1] != null)) { // gets the last two buttons pressed and compares them 
         				if(lastButtonPressed[0] == lastButtonPressed[1]) {
         					System.out.println("matched");
         					++totalMatches;
@@ -383,13 +384,13 @@ public class GUI {
         				else {
         					System.out.println("no match");
         				}
-        				totalButtonPresses=0;
+        				buttonPresses=0;
         				lastButtonPressed[0] = null;
         				lastButtonPressed[1] = null;
         			}
         			
         			if(inputDifficulty == 1 || inputDifficulty == 2) { // 2 matches required to pass
-        				if(totalMatches >= 2) {
+        				if(totalMatches >= 2 && totalButtonPresses == (columnsFinal*rowsFinal)) {
         					panel.removeAll();
         					optionButton.clear();
         					panel.add(mainLabel);
@@ -397,9 +398,9 @@ public class GUI {
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
         				}
-        				else if(totalButtonPresses == 12 && totalMatches < 2) {
+        				else if(totalButtonPresses == (columnsFinal*rowsFinal) && totalMatches < 2) {
         					panel.removeAll();
         					optionButton.clear();
         					panel.add(mainLabel);
@@ -407,11 +408,30 @@ public class GUI {
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
         				}
         			}
         			else if(inputDifficulty == 3) { // 3 matches required to pass
-        				
+        				if(totalMatches >= 3 && totalButtonPresses == (columnsFinal*rowsFinal)) {
+        					panel.removeAll();
+        					optionButton.clear();
+        					panel.add(mainLabel);
+        					mainLabel.setText("You win");
+        					panel.repaint();
+        					panel.revalidate();
+        					
+        					Main.setPlayerScores(currentPlayer, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        				}
+        				else if(totalButtonPresses == (columnsFinal*rowsFinal) && totalMatches < 3) {
+        					panel.removeAll();
+        					optionButton.clear();
+        					panel.add(mainLabel);
+        					mainLabel.setText("You lose");
+        					panel.repaint();
+        					panel.revalidate();
+        					
+        					Main.setPlayerScores(currentPlayer, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        				}
         			}
         		}
         	});
