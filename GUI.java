@@ -96,7 +96,7 @@ public class GUI {
 					panel.removeAll(); // shortcut to clearing the panel
 					panel.repaint(); 
 					optionButton.clear(); // clear the arraylist after each function to save memory and reset buttons
-					Main.addPlayer(1);
+					Main.addPlayer(1); // input number is game ID
 				}
 			}
 		);
@@ -107,13 +107,13 @@ public class GUI {
 					panel.removeAll();
 					panel.repaint(); 
 					optionButton.clear();
-					Main.addPlayer(2);
+					Main.addPlayer(2); // input number is game ID
 				}
 			}
 		);
 	}
 
-	public static void EnterPlayerData() {
+	public static void EnterPlayerData(int game) {
 		PlayerData newPlayer = new PlayerData();
 		
 		mainLabel.setFont(SubTitle);		
@@ -160,28 +160,11 @@ public class GUI {
 						newPlayer.setHighScoreGame2(0);
 						optionButton.clear();
 						textField.clear();
-						Main.addNewPlayer(newPlayer);
+						Main.addNewPlayer(newPlayer, game);
 					}
 				}
 			}
 		);		
-	}
-	
-	static int difficulty = 0;
-	
-	public static void difficultyEasy(int game) {
-		difficulty = 1;
-		startGame(game); // forced to do it like this due to java swing's non-asynchronous nature 
-	}
-	
-	public static void difficultyMedium(int game) {
-		difficulty = 2;
-		startGame(game);
-	}
-	
-	public static void difficultyHard(int game) {
-		difficulty = 3;
-		startGame(game);
 	}
 	
 	public static void difficulty(int game) {
@@ -225,7 +208,7 @@ public class GUI {
 					panel.repaint();
 					panel.revalidate();
 					optionButton.clear();
-					difficultyEasy(game);
+					startGame(game, 1);
 				}
 			}
 		);
@@ -237,7 +220,7 @@ public class GUI {
 					panel.repaint();
 					panel.revalidate();
 					optionButton.clear();
-					difficultyMedium(game);
+					startGame(game, 2);
 				}
 			}
 		);
@@ -249,13 +232,13 @@ public class GUI {
 					panel.repaint();
 					panel.revalidate();
 					optionButton.clear();
-					difficultyHard(game);
+					startGame(game, 3);
 				}
 			}
 		);
 	}
 	
-	public static void startGame(int game) {
+	public static void startGame(int game, int difficulty) {
 		switch(game) {
 		case 1:
 			memorizationGame(difficulty);
@@ -354,6 +337,16 @@ public class GUI {
         				totalButtonPresses=0;
         				lastButtonPressed[0] = null;
         				lastButtonPressed[1] = null;
+        			}
+        			
+        			if(inputDifficulty == 1) { // 3 matches required to pass
+        				
+        			}
+        			else if(inputDifficulty == 2) { // 
+        				
+        			}
+        			else if(inputDifficulty == 3) {
+        				
         			}
         		}
         	});
