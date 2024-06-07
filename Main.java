@@ -23,8 +23,8 @@ public class Main {
 	
 	public static void addNewPlayer(PlayerData newPlayer, int game) {
 		players.add(newPlayer);
-		SavePlayerData playerData = new SavePlayerData(newPlayer.getName(), newPlayer.getScore(), ));
-		GUI.difficulty(game);
+		SavePlayerData playerData = new SavePlayerData(newPlayer.getName(), null, null, null);
+		GUI.difficulty(game, newPlayer, playerData);
 	}
 	
 	public static void setPlayerScores(PlayerData player, long time, int score, int difficulty, int game) {

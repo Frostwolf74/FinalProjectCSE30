@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
@@ -32,13 +34,21 @@ public class GUI {
 	static ArrayList<JFormattedTextField> textField = new ArrayList<JFormattedTextField>();
 	
 	static PlayerData currentPlayer;
+	static SavePlayerData currentPlayerData;
 	
 	public static void mainMenu() { 
 		int h = 610, w = 1000; 
 
 		frame.setSize(w,h); // window size
 		frame.setLocation(500,250); // center
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+		    public void windowClosing(WindowEvent event) {
+		    	exitSavePlayerData(currentPlayer, currentPlayerData); // automatically save progress when window closes
+		        frame.dispose();
+		        System.exit(0);
+		    }
+		});
 		frame.setVisible(true);
 		frame.add(panel);
 		panel.setLayout(null);
@@ -164,7 +174,19 @@ public class GUI {
 		);		
 	}
 	
-	public static void difficulty(int game) {
+	public static void exitSavePlayerData(PlayerData player, SavePlayerData playerData) { 
+		if(player != null) {
+			playerData.writePlayerData(player);
+		}
+		else {
+			System.out.println("Player data does not currently exist, exiting program without saving.");
+			System.exit(0);
+		}
+	}
+	
+	public static void difficulty(int game, PlayerData player, SavePlayerData playerData) {
+		currentPlayer = player; // sending player data to global variable from previous function where player data was first defined 
+		currentPlayerData = playerData;
 		// TODO add information about each game mode
 
 		label2.setText("Easy: 3x4 square, no time limit, mistake limit is 10");

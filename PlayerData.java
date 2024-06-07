@@ -1,11 +1,9 @@
 package finalProject;
 
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 
-public class PlayerData {	
+public class PlayerData implements Serializable  {	
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private int[] score = new int[2];
 	private long[] time = new long[2];
