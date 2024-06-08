@@ -250,7 +250,7 @@ public class GUI {
 	public static void difficulty(int game, PlayerData player, SavePlayerData playerData) {
 		currentPlayer = player; // sending player data to global variable from previous function where player data was first defined 
 		currentPlayerData = playerData;
-		frame.setTitle(frame.getTitle() + " (" + player.getName() + ")");
+		frame.setTitle("Java Minigames" + " (" + player.getName() + ")");
 		label5.setFont(SubText);
 		label5.setText(String.format("Player information: " + currentPlayer.toString()));
 		label5.setBounds(10,470,1000,100);
@@ -348,7 +348,6 @@ public class GUI {
 		
 		int columns = 0;
 		int rows = 0;		
-		int totalButtons = 0;
 		
 		// pre-generate the symbols the shuffle them randomly
         String[] symbols = new String[42]; 
@@ -356,22 +355,18 @@ public class GUI {
         	symbols = new String[]{"!","!","@","@","#","#","$","$","%","%","&","&"};
         	columns = 3;
 			rows = 4;
-			totalButtons = 12;
         }
         else if(inputDifficulty == 2) {
         	symbols = new String[]{"!","!","@","@","#","#","$","$","%","%","&","&","*","*","+","+","~","~","=","="};
         	columns = 4;
 			rows = 5;
-			totalButtons = 20;
         }
         else if(inputDifficulty == 3) {
         	symbols = new String[]{"!","!","@","@","#","#","$","$","%","%","&","&","*","*","+","+","~","~","=","=","♦","♦","•","•","○","○","►","►","◄","◄","§","§","▬","▬","▲","▲","▼","▼","▓","▓","×","×"}; 
         	columns = 6;
         	rows = 7;
-        	totalButtons = 42;
         }
-        final int columnsFinal = columns; // making variables final to be accessed in action listener 
-        final int rowsFinal = rows;
+        final int totalButtonsFinal = columns*rows;
         String[] symbols1 = symbols; // making string effectively final
 		
 		for(int i = 0; i < columns; ++i) {
@@ -409,13 +404,13 @@ public class GUI {
         int offsetX = 110;
         int offsetY = 110;
 
-        for(int i = 0; i < totalButtons; i++) {
+        for(int i = 0; i < totalButtonsFinal; i++) {
             int x = baseX + (i % columns) * offsetX;
             int y = baseY + (i / columns) * offsetY;
             optionButton.get(i).setBounds(x, y, width, height);
         }
         
-        for(int i = 0; i < totalButtons; ++i) {
+        for(int i = 0; i < totalButtonsFinal; ++i) {
         	panel.add(optionButton.get(i));
         }
         
@@ -424,6 +419,7 @@ public class GUI {
         
         mainLabel.setBounds(20, 20, (optionButton.get(optionButton.size()-1).getBounds().x - optionButton.get(0).getBounds().x)+optionButton.get(0).getWidth()+40, (optionButton.get(optionButton.size()-1).getBounds().y - optionButton.get(0).getBounds().y)+40+90);
         
+        returnMenu.setBounds(230,435,85,25);
         returnMenu.addActionListener(
         		new ActionListener() {
         			public void actionPerformed(ActionEvent e) {
@@ -442,7 +438,7 @@ public class GUI {
             symbols[j] = temp;
         }
         
-        for(int i = 0; i < totalButtons; ++i) {
+        for(int i = 0; i < totalButtonsFinal; ++i) {
             optionButton.get(i).setText(symbols[i]);
             optionButton.get(i).setEnabled(false);
             panel.add(optionButton.get(i));
@@ -466,7 +462,7 @@ public class GUI {
         
         String lastButtonPressed[] = new String[2];
         
-        for (int i = 0; i < totalButtons; ++i) { // instantiated action listeners to shorten code, when a user clicks a button the symbol assigned to it will reappear 
+        for (int i = 0; i < totalButtonsFinal; ++i) { // instantiated action listeners to shorten code, when a user clicks a button the symbol assigned to it will reappear 
         	final int final_i = i;
         	final long startTime1 = startTime;
         	optionButton.get(i).addActionListener(new ActionListener() {
@@ -496,23 +492,29 @@ public class GUI {
         			}
         			
         			if(inputDifficulty == 1 || inputDifficulty == 2) { // 2 matches required to pass
-        				if(totalMatches >= 2 && totalButtonPresses == (columnsFinal*rowsFinal)) {
+        				if(totalMatches >= 2 && totalButtonPresses == totalButtonsFinal) {
         					panel.removeAll();
         					optionButton.clear();
         					panel.add(mainLabel);
         					mainLabel.setText("You win");
         					panel.add(returnMenu);
+        					totalMatches=0;
+        					buttonPresses=0;
+        					totalButtonPresses=0;
         					panel.repaint();
         					panel.revalidate();
         					
         					Main.setPlayerScores(currentPlayer, currentPlayerData, (System.currentTimeMillis()-startTime1), totalMatches, inputDifficulty, 1);
         				}
-        				else if(totalButtonPresses == (columnsFinal*rowsFinal) && totalMatches < 2) {
+        				else if(totalButtonPresses == totalButtonsFinal && totalMatches < 2) {
         					panel.removeAll();
         					optionButton.clear();
         					panel.add(mainLabel);
         					mainLabel.setText("You lose");
         					panel.add(returnMenu);
+        					totalMatches=0;
+        					buttonPresses=0;
+        					totalButtonPresses=0;
         					panel.repaint();
         					panel.revalidate();
         					
@@ -520,23 +522,29 @@ public class GUI {
         				}
         			}
         			else if(inputDifficulty == 3) { // 3 matches required to pass
-        				if(totalMatches >= 3 && totalButtonPresses == (columnsFinal*rowsFinal)) {
+        				if(totalMatches >= 3 && totalButtonPresses == totalButtonsFinal) {
         					panel.removeAll();
         					optionButton.clear();
         					panel.add(mainLabel);
         					mainLabel.setText("You win");
         					panel.add(returnMenu);
+        					totalMatches=0;
+        					buttonPresses=0;
+        					totalButtonPresses=0;
         					panel.repaint();
         					panel.revalidate();
         					
         					Main.setPlayerScores(currentPlayer, currentPlayerData, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
         				}
-        				else if(totalButtonPresses == (columnsFinal*rowsFinal) && totalMatches < 3) {
+        				else if(totalButtonPresses == totalButtonsFinal && totalMatches < 3) {
         					panel.removeAll();
         					optionButton.clear();
         					panel.add(mainLabel);
         					mainLabel.setText("You lose");
         					panel.add(returnMenu);
+        					totalMatches=0;
+        					buttonPresses=0;
+        					totalButtonPresses=0;
         					panel.repaint();
         					panel.revalidate();
         					
