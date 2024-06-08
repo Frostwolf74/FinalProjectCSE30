@@ -30,6 +30,7 @@ public class GUI {
 	static ArrayList<JButton> optionButton = new ArrayList<JButton>(); // saves memory and prevents bugs, all buttons are deleted after a function is completed 
 
 	static JButton exit = new JButton("Exit"); 
+	static JButton returnMenu = new JButton("Return");
 	
 	static ArrayList<JFormattedTextField> textField = new ArrayList<JFormattedTextField>();
 	
@@ -76,6 +77,7 @@ public class GUI {
 		
 		exit.setBounds(460,535,85,25);
 		panel.add(exit);
+		returnMenu.setBounds(460,535,85,25);
 		
 		optionButton.add(new JButton("Choose"));
 		optionButton.get(0).setBounds(230, 425, 85, 25);
@@ -121,30 +123,43 @@ public class GUI {
 		);
 	}
 
-	public static void EnterPlayerData(int game) {
-		PlayerData newPlayer = new PlayerData();
-		
+	public static void EnterPlayerData(int game) {		
 		mainLabel.setFont(SubTitle);		
-		mainLabel.setText ("<html> Enter player name </html>");
+		mainLabel.setText ("<html> Enter new player name or load player save </html>");
 		mainLabel.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(mainLabel);
 		
 		
 		optionButton.add(new JButton("proceed"));
-		optionButton.get(0).setBounds(455,535,85,25);
+		optionButton.get(0).setBounds(255,535,85,25);
 		panel.add(optionButton.get(0)); 
-		frame.getRootPane().setDefaultButton(optionButton.get(0));
-		optionButton.get(0).requestFocusInWindow(); 
+		
+		optionButton.add(new JButton("proceed"));
+		optionButton.get(1).setBounds(655,535,85,25);
+		panel.add(optionButton.get(1));
 		
 		textField.add(new JFormattedTextField());
-		textField.get(0).setBounds(455, 325, 85, 25);
+		textField.get(0).setBounds(255, 325, 85, 25);
 		panel.add(textField.get(0));
-		textField.get(0).requestFocus();
+		
+		textField.add(new JFormattedTextField());
+		textField.get(1).setBounds(655,325,85,25);
+		panel.add(textField.get(1));
 		
 		label2.setText("<html> Enter a name </html>");
 		label2.setFont(new Font("Arial", Font.ITALIC, 20));
 		label2.setBounds(440, 265, 300, 200);
 		label2.setForeground(Color.RED);
+		
+		label3.setText("Add new player");
+		label3.setFont(NormalText);
+		label3.setBounds(45, 200, 300, 200);
+		panel.add(label3);
+		
+		label4.setText("Load player by name (case sensitive)");
+		label4.setFont(NormalText);
+		label4.setBounds(575,200,300,200);
+		panel.add(label4);
 		
 		panel.repaint();
 		panel.revalidate();
@@ -158,25 +173,73 @@ public class GUI {
 						panel.revalidate();
 					}
 					else {
-						panel.removeAll();
-						panel.repaint();
-						panel.revalidate();
-						
 						String name = textField.get(0).getText();
-						frame.setTitle(frame.getTitle() + " (" + name + ")");
-						newPlayer.setName(name);
-						optionButton.clear();
-						textField.clear();
-						Main.addNewPlayer(newPlayer, game);
+						PlayerData newPlayer = new PlayerData();
+						int[] blankArray = {0,0}; // need this because the console freaks out when something is null
+						long[] longBlankArray = {0,0};
+						SavePlayerData playerData = new SavePlayerData(name, blankArray, longBlankArray, blankArray);
+						newPlayer = playerData;
+						
+						int e1 = playerData.writePlayerData(newPlayer, false);
+
+						if(e1 == 2) {
+							label2.setText("Player already exists");
+							panel.add(label2);
+							panel.repaint();
+							panel.revalidate();
+						}
+						else {
+							optionButton.clear();
+							textField.clear();
+							label2.setForeground(Color.BLACK);
+							panel.removeAll();
+							panel.repaint();
+							panel.revalidate();
+							Main.addNewPlayer(newPlayer, playerData, game);
+						}
 					}
 				}
 			}
-		);		
+		);
+		
+		optionButton.get(1).addActionListener(
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {						
+						if(textField.get(1).getText().isEmpty()) {
+							panel.add(label2);
+							panel.repaint();
+							panel.revalidate();
+						}
+						else {
+							String name = textField.get(1).getText();					
+							SavePlayerData playerData = new SavePlayerData(null, null, null, null);
+							PlayerData player = playerData.readPlayerData(name);
+							if(player == null) {
+								label2.setText("Player does not exist");
+								label2.setBounds(440, 265, 300, 200);
+								panel.add(label2);
+								panel.repaint();
+								panel.revalidate();
+							}
+							else {
+								panel.removeAll();
+								optionButton.clear();
+								textField.clear();
+								label2.setForeground(Color.BLACK);
+								
+								panel.repaint();
+								panel.revalidate();
+								Main.getPlayer(1, name);
+							}
+						}
+					}
+				}
+		);
 	}
 	
 	public static void exitSavePlayerData(PlayerData player, SavePlayerData playerData) { 
 		if(player != null) {
-			playerData.writePlayerData(player);
+			playerData.writePlayerData(player, true);
 		}
 		else {
 			System.out.println("Player data does not currently exist, exiting program without saving.");
@@ -187,14 +250,27 @@ public class GUI {
 	public static void difficulty(int game, PlayerData player, SavePlayerData playerData) {
 		currentPlayer = player; // sending player data to global variable from previous function where player data was first defined 
 		currentPlayerData = playerData;
-		// TODO add information about each game mode
+		frame.setTitle(frame.getTitle() + " (" + player.getName() + ")");
+		label5.setFont(SubText);
+		label5.setText(String.format("Player information: " + currentPlayer.toString()));
+		label5.setBounds(10,470,1000,100);
+		panel.add(label5);
 
 		label2.setText("Easy: 3x4 square, no time limit, mistake limit is 10");
-		label2.setBounds(910/4, 300, 300, 200);
-		label3.setText("Medium: 4x5 square, no time limit, mistake limit is 5");
-		label3.setBounds((910/4)+250, 300, 300, 200);
-		label4.setText("Hard: 6x7 square, no time limit, mistake limit is 3");
-		label4.setBounds((910/4)+500, 300, 300, 200);
+		label2.setHorizontalAlignment(JLabel.CENTER);
+		label2.setFont(NormalText);
+		label2.setBounds(10, 100+25, 965, 520);
+		label3.setText("Medium: 4x5 square, no time limit, mistake limit is 18");
+		label3.setHorizontalAlignment(JLabel.CENTER);
+		label3.setFont(NormalText);
+		label3.setBounds(10, 100+25+25, 965, 520);
+		label4.setText("Hard: 6x7 square, no time limit, mistake limit is 39");
+		label4.setHorizontalAlignment(JLabel.CENTER);
+		label4.setFont(NormalText);
+		label4.setBounds(10, 100+25+25+25, 965, 520);
+		panel.add(label2);
+		panel.add(label3);
+		panel.add(label4);
 		
 		mainLabel.setFont(SubTitle);		
 		mainLabel.setText ("<html> Select Difficulty </html>");
@@ -348,6 +424,14 @@ public class GUI {
         
         mainLabel.setBounds(20, 20, (optionButton.get(optionButton.size()-1).getBounds().x - optionButton.get(0).getBounds().x)+optionButton.get(0).getWidth()+40, (optionButton.get(optionButton.size()-1).getBounds().y - optionButton.get(0).getBounds().y)+40+90);
         
+        returnMenu.addActionListener(
+        		new ActionListener() {
+        			public void actionPerformed(ActionEvent e) {
+        				mainMenu();
+        			}
+        		}
+        );
+        
         Random rand = new Random();
         String temp;
         for (int i = 0; i < symbols.length - 1; ++i) {
@@ -400,11 +484,11 @@ public class GUI {
 
         			if((lastButtonPressed[0] != null) && (lastButtonPressed[1] != null)) { // gets the last two buttons pressed and compares them 
         				if(lastButtonPressed[0] == lastButtonPressed[1]) {
-        					System.out.println("matched");
+        					System.out.println("matched"); // console debug
         					++totalMatches;
         				}
         				else {
-        					System.out.println("no match");
+        					System.out.println("no match"); // console debug
         				}
         				buttonPresses=0;
         				lastButtonPressed[0] = null;
@@ -417,20 +501,22 @@ public class GUI {
         					optionButton.clear();
         					panel.add(mainLabel);
         					mainLabel.setText("You win");
+        					panel.add(returnMenu);
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(currentPlayer, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, currentPlayerData, (System.currentTimeMillis()-startTime1), totalMatches, inputDifficulty, 1);
         				}
         				else if(totalButtonPresses == (columnsFinal*rowsFinal) && totalMatches < 2) {
         					panel.removeAll();
         					optionButton.clear();
         					panel.add(mainLabel);
         					mainLabel.setText("You lose");
+        					panel.add(returnMenu);
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(currentPlayer, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, currentPlayerData, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
         				}
         			}
         			else if(inputDifficulty == 3) { // 3 matches required to pass
@@ -439,20 +525,22 @@ public class GUI {
         					optionButton.clear();
         					panel.add(mainLabel);
         					mainLabel.setText("You win");
+        					panel.add(returnMenu);
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(currentPlayer, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, currentPlayerData, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
         				}
         				else if(totalButtonPresses == (columnsFinal*rowsFinal) && totalMatches < 3) {
         					panel.removeAll();
         					optionButton.clear();
         					panel.add(mainLabel);
         					mainLabel.setText("You lose");
+        					panel.add(returnMenu);
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(currentPlayer, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, currentPlayerData, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
         				}
         			}
         		}

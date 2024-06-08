@@ -1,9 +1,6 @@
 package finalProject;
 
-import java.io.Serializable;
-
-public class PlayerData implements Serializable  {	
-	private static final long serialVersionUID = 1L;
+public class PlayerData {	
 	private String name;
 	private int[] score = new int[2];
 	private long[] time = new long[2];
@@ -52,11 +49,12 @@ public class PlayerData implements Serializable  {
 	
 	public String toString() {
 		return "Name: " + name 
-				+ "\nMemorization game score: " + score[0] 
-				+ "\nDifficulty completed: " + difficulty[0] 
-				+ "\nTime taken to complete: " + time[0]/1000 + " seconds" 
-				+ "\nSorting game score: " + score[1]
-				+ "\nDifficulty completed: " + difficulty[1] 
-				+ "\nTime taken to complete: " + time[1]/1000 + " seconds" ;
+				+ " \nMemorization game score: " + score[0] 
+				+ " \nDifficulty completed: " + difficulty[0] 
+				+ " \nTime taken to complete: " + time[0]/1000 + " seconds" 
+//				+ " \nSorting game score: " + score[1]
+//				+ " \nDifficulty completed: " + difficulty[1] 
+//				+ " \nTime taken to complete: " + time[1]/1000 + " seconds" 
+				;
 	}
 }
