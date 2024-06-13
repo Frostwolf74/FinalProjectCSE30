@@ -263,7 +263,8 @@ public class GUI {
 	
 	public static void exitSavePlayerData(PlayerData player, SavePlayerData playerData) { 
 		if(player != null) {
-			playerData.writePlayerData(player, currentGame, true, false);
+			player.setName(player.getName() + "_ExitSave");
+			playerData.writePlayerData(player, currentGame, true, true);
 		}
 		else {
 			System.out.println("Player data does not currently exist, exiting program without saving.");

@@ -27,11 +27,19 @@ private static final String filepath = "C:\\Temp\\";
         }
         else {
             try {
+                int[] fileScore = null;
+                long[] fileTime = null;
+                int[] fileDifficulty = null;
+                if(!isNewFile) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filepath + player.getName() + ".txt")));
+                	String name = reader.readLine().split("\n|")[0];
+                	fileScore = StringArrayToIntArray(reader.readLine().split("\n")[0].split("\\|"));
+                    fileTime = StringArrayToLongArray(reader.readLine().split("\n")[0].split("\\|"));
+                    fileDifficulty = StringArrayToIntArray(reader.readLine().split("\n")[0].split("\\|"));
+                    reader.close();
+                }
+                
                 FileWriter playerData = new FileWriter(filepath + player.getName() + ".txt");// all player data files will be the player's name
-                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filepath + player.getName() + ".txt")));
-                int[] fileScore = StringArrayToIntArray(reader.readLine().split("\n")[0].split("\\|"));
-                long[] fileTime = StringArrayToLongArray(reader.readLine().split("\n")[0].split("\\|"));
-                int[] fileDifficulty = StringArrayToIntArray(reader.readLine().split("\n")[0].split("\\|"));
                 System.out.println("File found.");
 
                 if(this.name == null) {
@@ -58,14 +66,13 @@ private static final String filepath = "C:\\Temp\\";
                     }
                 }
                 else if(isNewFile) { 
-                	playerData.write(this.name + "|" + this.name + "\n");
+                	playerData.write(name + "|" + name + "\n");
                 	playerData.write(this.score[game] + "|" + this.score[game] + "\n"); System.out.println("Saved score: " + this.score[game]);
                 	playerData.write(this.time[game] + "|" + this.time[game] + "\n"); System.out.println("Saved time: " + this.time[game]);
                 	playerData.write(player.getDifficulty(game) + "|" + this.difficulty[game] + "\n"); System.out.println("Saved difficulty: " + this.getDifficulty(game));
                 }
 
                 playerData.close();
-                reader.close();
                 
                 System.out.println("Player data saved successfully.");
             }catch(Exception e1) {
