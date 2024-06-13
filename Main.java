@@ -24,6 +24,9 @@ public class Main {
         player.setScore(score, game);
         player.setDifficulty(difficulty, game);
         player.setTime(time, game);
+        playerData.setName(player.getName());
+        playerData.setScore(score, game);
+        playerData.setTime(time, game);
         playerData.writePlayerData(player, game, true, false);
     }
 }

@@ -235,9 +235,9 @@ public class GUI {
 						}
 						else {
 							String name = textField.get(1).getText();					
-							SavePlayerData playerData = new SavePlayerData(null, null, null, null);
-							PlayerData player = playerData.readPlayerData(name);
-							if(player == null) {
+							SavePlayerData testplayerData = new SavePlayerData(null, null, null, null);
+							PlayerData testPlayer = testplayerData.readPlayerData(name);
+							if(testPlayer == null) {
 								label2.setText("Player does not exist");
 								label2.setBounds(440, 265, 300, 200);
 								panel.add(label2);
@@ -252,7 +252,7 @@ public class GUI {
 								
 								panel.repaint();
 								panel.revalidate();
-								player = null;
+								testPlayer = null;
 								Main.getPlayer(currentGame, name);
 							}
 						}
@@ -276,8 +276,6 @@ public class GUI {
 		currentPlayer = player; // sending player data to global variable from previous function where player data was first defined 
 		currentPlayerData = playerData;
 		currentGame = game;
-		
-		playerData.writePlayerData(player, currentGame, true, true);
 		
 		frame.setTitle("Java Minigames" + " (" + player.getName() + ")");
 		label5.setFont(SubText);
@@ -527,13 +525,14 @@ public class GUI {
         					panel.add(mainLabel);
         					mainLabel.setText("You win");
         					panel.add(returnMenu);
+        					int outputMatches = totalMatches;
         					totalMatches=0;
         					buttonPresses=0;
         					totalButtonPresses=0;
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(currentPlayer, currentPlayerData, (System.currentTimeMillis()-startTime1), totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, currentPlayerData, (System.currentTimeMillis()-startTime1)/1000, outputMatches, inputDifficulty, 1);
         				}
         				else if(totalButtonPresses == totalButtonsFinal && totalMatches < 2) {
         					panel.removeAll();
@@ -541,13 +540,14 @@ public class GUI {
         					panel.add(mainLabel);
         					mainLabel.setText("You lose");
         					panel.add(returnMenu);
+        					int outputMatches = totalMatches;
         					totalMatches=0;
         					buttonPresses=0;
         					totalButtonPresses=0;
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(currentPlayer, currentPlayerData, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, currentPlayerData, (System.currentTimeMillis()-startTime1)/1000, outputMatches, inputDifficulty, 1);
         				}
         			}
         			else if(inputDifficulty == 3) { // 3 matches required to pass
@@ -557,13 +557,14 @@ public class GUI {
         					panel.add(mainLabel);
         					mainLabel.setText("You win");
         					panel.add(returnMenu);
+        					int outputMatches = totalMatches;
         					totalMatches=0;
         					buttonPresses=0;
         					totalButtonPresses=0;
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(currentPlayer, currentPlayerData, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, currentPlayerData, (System.currentTimeMillis()-startTime1)/1000, outputMatches, inputDifficulty, 1);
         				}
         				else if(totalButtonPresses == totalButtonsFinal && totalMatches < 3) {
         					panel.removeAll();
@@ -571,13 +572,14 @@ public class GUI {
         					panel.add(mainLabel);
         					mainLabel.setText("You lose");
         					panel.add(returnMenu);
+        					int outputMatches = totalMatches;
         					totalMatches=0;
         					buttonPresses=0;
         					totalButtonPresses=0;
         					panel.repaint();
         					panel.revalidate();
         					
-        					Main.setPlayerScores(currentPlayer, currentPlayerData, System.currentTimeMillis()-startTime1, totalMatches, inputDifficulty, 1);
+        					Main.setPlayerScores(currentPlayer, currentPlayerData, (System.currentTimeMillis()-startTime1)/1000, outputMatches, inputDifficulty, 1);
         				}
         			}
         		}

@@ -22,7 +22,7 @@ private static final String filepath = "C:\\Temp\\";
         Exception e = null;
         File f = new File(filepath + player.getName() + ".txt");
         if(f.exists() && !f.isDirectory() && !overwrite) { 
-            System.out.println("File already exists");
+            System.out.println("File already exists.");
             return 2; // failed - file already exists error 
         }
         else {
@@ -32,8 +32,8 @@ private static final String filepath = "C:\\Temp\\";
                 int[] fileDifficulty = null;
                 if(!isNewFile) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filepath + player.getName() + ".txt")));
-                	String name = reader.readLine().split("\n|")[0];
-                	fileScore = StringArrayToIntArray(reader.readLine().split("\n")[0].split("\\|"));
+                    name = reader.readLine().split("\n")[0];
+                    fileScore = StringArrayToIntArray(reader.readLine().split("\n")[0].split("\\|"));
                     fileTime = StringArrayToLongArray(reader.readLine().split("\n")[0].split("\\|"));
                     fileDifficulty = StringArrayToIntArray(reader.readLine().split("\n")[0].split("\\|"));
                     reader.close();
@@ -55,21 +55,22 @@ private static final String filepath = "C:\\Temp\\";
                     difficulty = new int[2];
                 }
                 if(!isNewFile) { // file will be blank, there will be nothing to compare
-                	if(player.getScore(game) > fileScore[game]) {
-                    	playerData.write(this.score[game] + "|" + this.score[game] + "\n"); System.out.println("Saved score: " + this.score[game]);
+                    playerData.write(name + "\n"); System.out.println("Saved name: " + name);
+                    if(player.getScore(game) > fileScore[game]) {
+                        playerData.write(this.score[0] + "|" + this.score[1] + "\n"); System.out.println("Saved score: " + this.score[game]);
                     }
                     if(player.getTime(game) > fileTime[game]) {
-                    	playerData.write(this.time[game] + "|" + this.time[game] + "\n"); System.out.println("Saved time: " + this.time[game]);
+                        playerData.write(this.time[0] + "|" + this.time[1] + "\n"); System.out.println("Saved time: " + this.time[game]);
                     }
                     if(player.getDifficulty(game) > fileDifficulty[game]) {
-                    	playerData.write(player.getDifficulty(game) + "|" + this.difficulty[game] + "\n"); System.out.println("Saved difficulty: " + this.getDifficulty(game));
+                        playerData.write(player.getDifficulty(0) + "|" + this.difficulty[1] + "\n"); System.out.println("Saved difficulty: " + this.getDifficulty(game));
                     }
                 }
-                else if(isNewFile) { 
-                	playerData.write(name + "|" + name + "\n");
-                	playerData.write(this.score[game] + "|" + this.score[game] + "\n"); System.out.println("Saved score: " + this.score[game]);
-                	playerData.write(this.time[game] + "|" + this.time[game] + "\n"); System.out.println("Saved time: " + this.time[game]);
-                	playerData.write(player.getDifficulty(game) + "|" + this.difficulty[game] + "\n"); System.out.println("Saved difficulty: " + this.getDifficulty(game));
+                else if(isNewFile) {
+                    playerData.write(this.name + "\n"); System.out.println("Saved name: " + name);
+                    playerData.write(this.score[0] + "|" + this.score[0] + "\n"); System.out.println("Saved score: " + this.score[game]);
+                    playerData.write(this.time[0] + "|" + this.time[1] + "\n"); System.out.println("Saved time: " + this.time[game]);
+                    playerData.write(player.getDifficulty(0) + "|" + this.difficulty[1] + "\n"); System.out.println("Saved difficulty: " + this.getDifficulty(game));
                 }
 
                 playerData.close();
@@ -86,10 +87,10 @@ private static final String filepath = "C:\\Temp\\";
                 return 0; // failed
             }
         }
-    }    
+    }
     
     public PlayerData readPlayerData(String inputName) {
-        PlayerData player = null;
+        PlayerData player = new PlayerData(null, null, null, null);
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filepath + inputName + ".txt")));
             String name = reader.readLine().split("\n")[0];

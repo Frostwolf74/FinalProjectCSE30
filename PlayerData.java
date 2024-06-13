@@ -28,7 +28,7 @@ public class PlayerData {
     }
 
     public void setScore(int score, int game) {
-        this.score[game] = score;
+	    this.score[game] = score;
     }
 
     public long getTime(int game) {
