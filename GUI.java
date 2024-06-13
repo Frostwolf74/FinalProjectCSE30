@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
@@ -36,6 +37,7 @@ public class GUI {
 	
 	static PlayerData currentPlayer;
 	static SavePlayerData currentPlayerData;
+	static int currentGame;
 	
 	public static void mainMenu() { 
 		int h = 610, w = 1000; 
@@ -87,6 +89,10 @@ public class GUI {
 		optionButton.get(1).setBounds(690, 425, 85, 25);
 		panel.add(optionButton.get(1));
 		
+		optionButton.add(new JButton("Purge player data"));
+		optionButton.get(2).setBounds(20, 20, 170, 25);
+		panel.add(optionButton.get(2));
+		
 		panel.revalidate();
 		panel.repaint(); 
 		
@@ -121,6 +127,23 @@ public class GUI {
 				}
 			}
 		);
+		
+		optionButton.get(2).addActionListener(
+			new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					File file = new File("C:\\Temp");
+					String[] files = file.list();
+					for(int i = 0; i < files.length; ++i) {
+						try {
+						file = new File("C:\\Temp\\" + files[i]);
+						file.delete();
+						}catch(Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+		);	
 	}
 
 	public static void EnterPlayerData(int game) {		
@@ -156,7 +179,7 @@ public class GUI {
 		label3.setBounds(45, 200, 300, 200);
 		panel.add(label3);
 		
-		label4.setText("Load player by name (case sensitive)");
+		label4.setText("Load player by name (not case sensitive)");
 		label4.setFont(NormalText);
 		label4.setBounds(575,200,300,200);
 		panel.add(label4);
@@ -180,7 +203,7 @@ public class GUI {
 						SavePlayerData playerData = new SavePlayerData(name, blankArray, longBlankArray, blankArray);
 						newPlayer = playerData;
 						
-						int e1 = playerData.writePlayerData(newPlayer, false);
+						int e1 = playerData.writePlayerData(newPlayer, currentGame, false, true);
 
 						if(e1 == 2) {
 							label2.setText("Player already exists");
@@ -229,7 +252,8 @@ public class GUI {
 								
 								panel.repaint();
 								panel.revalidate();
-								Main.getPlayer(1, name);
+								player = null;
+								Main.getPlayer(currentGame, name);
 							}
 						}
 					}
@@ -239,7 +263,7 @@ public class GUI {
 	
 	public static void exitSavePlayerData(PlayerData player, SavePlayerData playerData) { 
 		if(player != null) {
-			playerData.writePlayerData(player, true);
+			playerData.writePlayerData(player, currentGame, true, false);
 		}
 		else {
 			System.out.println("Player data does not currently exist, exiting program without saving.");
@@ -250,6 +274,10 @@ public class GUI {
 	public static void difficulty(int game, PlayerData player, SavePlayerData playerData) {
 		currentPlayer = player; // sending player data to global variable from previous function where player data was first defined 
 		currentPlayerData = playerData;
+		currentGame = game;
+		
+		playerData.writePlayerData(player, currentGame, true, true);
+		
 		frame.setTitle("Java Minigames" + " (" + player.getName() + ")");
 		label5.setFont(SubText);
 		label5.setText(String.format("Player information: " + currentPlayer.toString()));

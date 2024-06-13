@@ -16,13 +16,14 @@ public class Main {
     public static void getPlayer(int game, String playerName) {
         SavePlayerData playerData = new SavePlayerData(null, null, null, null); // blank player is created and save data is written to the blank
         PlayerData player = playerData.readPlayerData(playerName);
+        
         GUI.difficulty(game, player, playerData);
     }
     
     public static void setPlayerScores(PlayerData player, SavePlayerData playerData, long time, int score, int difficulty, int game) {
-        player.setScore(score, --game);
+        player.setScore(score, game);
         player.setDifficulty(difficulty, game);
         player.setTime(time, game);
-        playerData.writePlayerData(player, true);
+        playerData.writePlayerData(player, game, true, false);
     }
 }
