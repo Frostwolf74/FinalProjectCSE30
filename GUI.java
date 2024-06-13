@@ -199,6 +199,8 @@ public class GUI extends JFrame {
 		
 		ArrayList<HighScoreSorter> hs = new ArrayList<HighScoreSorter>();
 		
+		//TODO sort
+		
 		String textArea = "";
 		for(int j = 0; j < testPlayer.size(); ++j) {
 			textArea += "\nPlayer: " + testPlayer.get(j).getName() + "\n   Score: " + testPlayer.get(j).getScore(0);
