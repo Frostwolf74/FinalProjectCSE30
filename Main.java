@@ -21,12 +21,12 @@ public class Main {
     }
     
     public static void setPlayerScores(PlayerData player, SavePlayerData playerData, long time, int score, int difficulty, int game) {
-        player.setScore(score, game);
-        player.setDifficulty(difficulty, game);
-        player.setTime(time, game);
+        player.setScore(score, game-1);
+        player.setDifficulty(difficulty, game-1);
+        player.setTime(time, game-1);
         playerData.setName(player.getName());
         playerData.setScore(score, game);
         playerData.setTime(time, game);
-        playerData.writePlayerData(player, game, true, false);
+        playerData.writePlayerData(player, game-1, true, false, false);
     }
 }

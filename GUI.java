@@ -10,10 +10,8 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class GUI {
+public class GUI extends JFrame {
 	static Font Title = new Font("Arial", Font.PLAIN, 50);
 	static Font SubTitle = new Font("Arial", Font.PLAIN, 25);
 	static Font NormalText = new Font("Arial", Font.PLAIN, 15);
@@ -34,6 +32,8 @@ public class GUI {
 	static JButton returnMenu = new JButton("Return");
 	
 	static ArrayList<JFormattedTextField> textField = new ArrayList<JFormattedTextField>();
+	
+	static PopupFactory popUp = new PopupFactory();
 	
 	static PlayerData currentPlayer;
 	static SavePlayerData currentPlayerData;
@@ -77,9 +77,18 @@ public class GUI {
 		label3.setBounds(510, 300, 300, 200);
 		panel.add(label3);
 		
+		returnMenu.setBounds(230,435,85,25);
+        returnMenu.addActionListener(
+        		new ActionListener() {
+        			public void actionPerformed(ActionEvent e) {
+        				panel.removeAll();
+        				mainMenu();
+        			}
+        		}
+        );
+		
 		exit.setBounds(460,535,85,25);
 		panel.add(exit);
-		returnMenu.setBounds(460,535,85,25);
 		
 		optionButton.add(new JButton("Choose"));
 		optionButton.get(0).setBounds(230, 425, 85, 25);
@@ -87,11 +96,16 @@ public class GUI {
 		
 		optionButton.add(new JButton("Choose"));
 		optionButton.get(1).setBounds(690, 425, 85, 25);
+		optionButton.get(1).setEnabled(false);
 		panel.add(optionButton.get(1));
 		
 		optionButton.add(new JButton("Purge player data"));
 		optionButton.get(2).setBounds(20, 20, 170, 25);
 		panel.add(optionButton.get(2));
+		
+		optionButton.add(new JButton("High Scores"));
+		optionButton.get(3).setBounds(20, 50, 170, 25);
+		panel.add(optionButton.get(3));
 		
 		panel.revalidate();
 		panel.repaint(); 
@@ -144,7 +158,65 @@ public class GUI {
 				}
 			}
 		);	
+		
+		optionButton.get(3).addActionListener(
+			new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					new GUI();
+				}
+			}
+		);
 	}
+	
+	public GUI() {
+      getContentPane().setLayout(new FlowLayout());
+      showHighScores();
+      setSize(300, 300);
+      setLocation(450, 300);
+   }
+	
+	private void showHighScores() {
+		JPanel panel = new JPanel();
+
+		JPanel holder = new JPanel(
+				new BorderLayout());
+		holder.add(panel, BorderLayout.NORTH);
+		
+		File file = new File("C:\\Temp");
+		String[] files = file.list();
+		
+		SavePlayerData testplayerData = new SavePlayerData(null, null, null, null);
+		ArrayList<PlayerData> testPlayer = new ArrayList<PlayerData>();
+		
+		for(int i = 0; i < files.length; ++i) {
+			try {
+			file = new File("C:\\Temp\\" + files[i]);
+			testPlayer.add(testplayerData.readPlayerData(files[i]));
+			}catch(Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		ArrayList<HighScoreSorter> hs = new ArrayList<HighScoreSorter>();
+		
+		String textArea = "";
+		for(int j = 0; j < testPlayer.size(); ++j) {
+			textArea += "\nPlayer: " + testPlayer.get(j).getName() + "\n   Score: " + testPlayer.get(j).getScore(0);
+		}
+		
+		JScrollPane scroll = new JScrollPane(
+				new JTextArea(textArea));
+		scroll.setPreferredSize(new Dimension(300, 450));
+		
+		holder.add(scroll, BorderLayout.CENTER);
+
+		// This is where the dialog is actually displayed..
+		JOptionPane.showMessageDialog( this,
+				holder,
+				"High Scores",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
 
 	public static void EnterPlayerData(int game) {		
 		mainLabel.setFont(SubTitle);		
@@ -203,7 +275,7 @@ public class GUI {
 						SavePlayerData playerData = new SavePlayerData(name, blankArray, longBlankArray, blankArray);
 						newPlayer = playerData;
 						
-						int e1 = playerData.writePlayerData(newPlayer, currentGame, false, true);
+						int e1 = playerData.writePlayerData(newPlayer, currentGame, false, true, false);
 
 						if(e1 == 2) {
 							label2.setText("Player already exists");
@@ -253,7 +325,7 @@ public class GUI {
 								panel.repaint();
 								panel.revalidate();
 								testPlayer = null;
-								Main.getPlayer(currentGame, name);
+								Main.getPlayer(game, name);
 							}
 						}
 					}
@@ -264,7 +336,7 @@ public class GUI {
 	public static void exitSavePlayerData(PlayerData player, SavePlayerData playerData) { 
 		if(player != null) {
 			player.setName(player.getName() + "_ExitSave");
-			playerData.writePlayerData(player, currentGame, true, true);
+			playerData.writePlayerData(player, currentGame, true, true, true);
 		}
 		else {
 			System.out.println("Player data does not currently exist, exiting program without saving.");
@@ -279,7 +351,7 @@ public class GUI {
 		
 		frame.setTitle("Java Minigames" + " (" + player.getName() + ")");
 		label5.setFont(SubText);
-		label5.setText(String.format("Player information: " + currentPlayer.toString()));
+		label5.setText(String.format("Player information: " + player.toString()));
 		label5.setBounds(10,470,1000,100);
 		panel.add(label5);
 
@@ -368,15 +440,16 @@ public class GUI {
 	}
 
 	public static void memorizationGame(int inputDifficulty) {
+		currentPlayer.setDifficulty(inputDifficulty, currentGame);
 		frame.setSize(1920,1080);
-		mainLabel.setBounds(10, 10, 1920-35, 1080-90);
+		mainLabel.setBounds(10, 30, 1920-35, 1080-90);
 		panel.add(mainLabel);
 		mainLabel.setText(null);
 		
 		int columns = 0;
 		int rows = 0;		
 		
-		// pre-generate the symbols the shuffle them randomly
+		// pre-generate the symbols then shuffle them randomly
         String[] symbols = new String[42]; 
         if(inputDifficulty == 1) {
         	symbols = new String[]{"!","!","@","@","#","#","$","$","%","%","&","&"};
@@ -425,7 +498,7 @@ public class GUI {
 		}
 		
 		int baseX = 40;
-        int baseY = 40;
+        int baseY = 60;
         int width = 90;
         int height = 90;
         int offsetX = 110;
@@ -444,16 +517,7 @@ public class GUI {
         frame.setSize(((optionButton.get(optionButton.size()-1).getBounds().x - optionButton.get(0).getBounds().x)+optionButton.get(0).getWidth())+110, (optionButton.get(optionButton.size()-1).getBounds().y - optionButton.get(0).getBounds().y)+40+110+90);
         frame.setLocation(500,250);
         
-        mainLabel.setBounds(20, 20, (optionButton.get(optionButton.size()-1).getBounds().x - optionButton.get(0).getBounds().x)+optionButton.get(0).getWidth()+40, (optionButton.get(optionButton.size()-1).getBounds().y - optionButton.get(0).getBounds().y)+40+90);
-        
-        returnMenu.setBounds(230,435,85,25);
-        returnMenu.addActionListener(
-        		new ActionListener() {
-        			public void actionPerformed(ActionEvent e) {
-        				mainMenu();
-        			}
-        		}
-        );
+        mainLabel.setBounds(20, 40, (optionButton.get(optionButton.size()-1).getBounds().x - optionButton.get(0).getBounds().x)+optionButton.get(0).getWidth()+40, (optionButton.get(optionButton.size()-1).getBounds().y - optionButton.get(0).getBounds().y)+40+90);
         
         Random rand = new Random();
         String temp;
@@ -471,19 +535,14 @@ public class GUI {
             panel.add(optionButton.get(i));
         }
         
-        Timer timer = new Timer();
+//        Timer timer = new Timer();
         
-        timer.schedule(new TimerTask() { // hide all of the text after a second and half
-        	@Override
-        	public void run() {
-        		for(JButton i: optionButton) {
-        			i.setText(null);
-        			i.setEnabled(true);
-        			panel.repaint();
-        			panel.revalidate();
-        		}
-        	}
-        }, 1500);    
+//        timer.schedule(new TimerTask() { // hide all of the text after a second and half, alternative way of hiding symbols
+//        	@Override
+//        	public void run() {
+//        		
+//        	}
+//        }, 1500);    
         
         long startTime = System.currentTimeMillis(); // game time
         
@@ -585,6 +644,23 @@ public class GUI {
         		}
         	});
         }
+        
+        JButton startButton = new JButton("Start");
+        startButton.setBounds(20, 10, 85, 25);
+        panel.add(startButton);
+        
+        startButton.addActionListener(
+        		new ActionListener() {
+        			public void actionPerformed(ActionEvent e) {
+        				for(JButton i: optionButton) {
+                			i.setText(null);
+                			i.setEnabled(true);
+                			panel.repaint();
+                			panel.revalidate();
+                		}
+        			}
+        		}
+        );
 	}
 
 	public static void sortingGame(int inputDifficulty) {

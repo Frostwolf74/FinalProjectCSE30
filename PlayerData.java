@@ -49,9 +49,9 @@ public class PlayerData {
     
     public String toString() {
         return "Name: " + name 
-                + " \nMemorization game score: " + score[0] 
-                + " \nDifficulty completed: " + difficulty[0] 
-                + " \nTime taken to complete: " + time[0]/1000 + " seconds" 
+                + " \nMemorization game score: " + this.score[0] 
+                + " \nDifficulty completed: " + this.difficulty[0] 
+                + " \nTime taken to complete: " + this.time[0] + " seconds" 
 //              + " \nSorting game score: " + score[1]
 //              + " \nDifficulty completed: " + difficulty[1] 
 //              + " \nTime taken to complete: " + time[1]/1000 + " seconds" 
