@@ -9,8 +9,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class GUI extends JFrame {
@@ -79,6 +77,13 @@ public class GUI extends JFrame {
 		label3.setBounds(510, 300, 300, 200);
 		panel.add(label3);
 		
+		label4.setFont(SubTitle);
+		label4.setText("<html> by Frostwolf74 </html>");
+		label4.setHorizontalAlignment(JLabel.CENTER);
+		label4.setBounds(10, 12, w-35, 150);
+		label4.setLocation(10, 10);
+		panel.add(label4);
+		
 		returnMenu.setBounds(230,435,85,25);
         returnMenu.addActionListener(
         		new ActionListener() {
@@ -102,11 +107,11 @@ public class GUI extends JFrame {
 		panel.add(optionButton.get(1));
 		
 		optionButton.add(new JButton("Purge player data"));
-		optionButton.get(2).setBounds(20, 20, 170, 25);
+		optionButton.get(2).setBounds(w-210, 20, 170, 25);
 		panel.add(optionButton.get(2));
 		
 		optionButton.add(new JButton("High Scores"));
-		optionButton.get(3).setBounds(20, 50, 170, 25);
+		optionButton.get(3).setBounds(20, 20, 170, 25);
 		panel.add(optionButton.get(3));
 		
 		panel.revalidate();

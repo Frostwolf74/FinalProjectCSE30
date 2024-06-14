@@ -19,12 +19,14 @@ private static String filepath = "C:\\Temp\\";
     }
     
     public int writePlayerData(PlayerData player, int game, boolean overwrite, boolean isNewFile, boolean writeBackup) {
-//        if(writeBackup) {
-//        	filepath = "C:\\Temp\\GameBackups\\";
-//        }
-//        else {
-//        	filepath = "C:\\Temp\\";
-//        }
+        if(writeBackup) {
+        	filepath = "%Documents%\\GameBackups";
+        	File dir = new File(filepath);
+        	dir.mkdir();
+        }
+        else {
+        	filepath = "C:\\Temp\\";
+        }
     	Exception e = null;
         File f = new File(filepath + player.getName());
         if(f.exists() && !f.isDirectory() && !overwrite) { 
