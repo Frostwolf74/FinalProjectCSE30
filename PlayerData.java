@@ -1,6 +1,6 @@
 package finalProject;
 
-public class PlayerData {	
+public class PlayerData implements Comparable<PlayerData> {	
 	protected String name;
     protected int[] score = new int[2];
     protected long[] time = new long[2];
@@ -46,6 +46,16 @@ public class PlayerData {
     public void setDifficulty(int difficulty, int game) {
         this.difficulty[game] = difficulty;
     }
+    
+    @Override
+    public int compareTo(PlayerData o){  
+   		if(o.getScore(0) == this.getScore(0))  
+   			return 0;  
+   		else if(o.getScore(0) > this.getScore(0))  
+   			return -1;  
+   		else  
+   			return 1;  
+   	}  
     
     public String toString() {
         return "Name: " + name 

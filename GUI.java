@@ -9,6 +9,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class GUI extends JFrame {
@@ -197,9 +199,7 @@ public class GUI extends JFrame {
 			}
 		}
 		
-		ArrayList<HighScoreSorter> hs = new ArrayList<HighScoreSorter>();
-		
-		//TODO sort
+		testPlayer.sort( (a, b) -> { return -1 * a.compareTo(b); } );
 		
 		String textArea = "";
 		for(int j = 0; j < testPlayer.size(); ++j) {

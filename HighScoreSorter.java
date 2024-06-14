@@ -1,20 +1,24 @@
 package finalProject;
 
-public class HighScoreSorter implements Comparable<PlayerData> {
-	public int score=0;
+public class HighScoreSorter implements Comparable<HighScoreSorter> {
+	public PlayerData player;
 
-	HighScoreSorter(int score){  
-		this.score = score;  
+	HighScoreSorter(PlayerData testPlayer){  
+		this.player = testPlayer;  
 	}  
 	
-	public void setScore(int score) {
-		this.score = score;
+	public void setPlayer(PlayerData newPlayer) {
+		this.player = newPlayer;
 	}
 	
-	public int compareTo(PlayerData o){  
-		if(score == o.score[0])  
+	public PlayerData getPlayer() {
+		return player;
+	}
+	 @Override
+	public int compareTo(HighScoreSorter o){  
+		if(player.getScore(0) == o.player.getScore(0))  
 			return 0;  
-		else if(score > o.score[0])  
+		else if(player.getScore(0) > o.player.getScore(0))  
 			return 1;  
 		else  
 			return -1;  
